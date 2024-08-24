@@ -1,0 +1,48 @@
+.primary-text {
+    @apply text-blue-600
+}
+.primary-text-hover {
+    @apply text-blue-700
+}
+
+.primary-text-dark {
+    @apply text-blue-700
+}
+
+.primary-text-dark-hover {
+    @apply text-blue-700
+}
+
+.primary-bg {
+    @apply bg-gray-50
+}
+
+/*
+account for mobile
+*/
+.theme-flex {
+
+}
+
+/*
+account for mobile
+*/
+.theme-grid {
+
+}
+
+.theme-space {
+
+}
+
+.primary-header {
+
+}
+
+.secondary-header {
+
+}
+
+.theme-link {
+    @apply text-blue-500
+}
