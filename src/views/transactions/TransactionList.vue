@@ -98,21 +98,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="right" width="150" fixed="right">
+      <el-table-column align="right" width="100" fixed="right">
         <template #header>
           Actions
           <div class="theme-space-large"></div>
         </template>
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            Edit
-          </el-button>
-          <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-          >
-            Delete
+          <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">
+            View
           </el-button>
         </template>
       </el-table-column>
@@ -123,6 +116,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
+import {View} from "@element-plus/icons-vue";
 
 interface User {
   date: string
