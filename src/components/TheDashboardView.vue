@@ -6,6 +6,7 @@ import { UserFilled} from "@element-plus/icons-vue";
 import {useStore} from "vuex";
 import {deleteLocalStorageInformation} from "@/utility/functions.js";
 import {useRouter, useRoute} from "vue-router";
+import config from "@/utility/configs.json"
 const store = useStore()
 const router = useRouter()
 import {watch, computed} from "vue"
@@ -19,10 +20,8 @@ const breadcrumbStyle = computed(() => {
 
 const routerViewStyle = computed(() => {
   return {
-    // Add dynamic styles based on the theme
     color: store.getters.getLightMode ? 'gray' : 'white',
-    backgroundColor: store.getters.getLightMode ? 'white' : 'gray',
-    // Add any other styles you want to apply
+    backgroundColor: store.getters.getLightMode ? 'gray-50' : 'gray',
   };
 });
 
@@ -49,27 +48,27 @@ watch(route, updateBreadcrumbs, { immediate: true });
 <template>
   <div class="h-full min-w-screen max-w-screen-md" style="max-width: 100vw">
 
-  <div class=" flex flex-col  min-w-full  h-full items-center">
+  <div class=" flex flex-col  min-w-full  h-screen items-center">
 <!--    h-[70px]-->
       <div class=" border-b w-full flex items-center justify-between gap-4 px-4">
-        <div class="h-[70px] md:flex items-center border-b hidden ">
-          <el-button class="w-[40px] bg-amber-600"
-                     @click="store.state.sideNavCollapse = !store.state.sideNavCollapse">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5" />
-            </svg>
-          </el-button>
+        <div class="h-fit w-fit theme-flex">
+          <div class=" h-[70px]  theme-flex primary-header">
+            {{config.appName}}
+          </div>
+
+          <div class="h-[70px] w-fit md:flex items-center  hidden">
+            <el-button class="w-[40px] bg-amber-600"
+                       @click="store.state.sideNavCollapse = !store.state.sideNavCollapse">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5" />
+              </svg>
+            </el-button>
+          </div>
         </div>
 
-        <div class="border-b h-[70px]  flex items-center  text-center text-2xl font-bold text-[#fc7c04]">
-          <!--      <img class="" src="@/assets/Kejamove_Logo1x.png">-->
-          KEJA<span class="text-gray-800">MOVE</span> <span class="mx-2 text-gray-500 italic hidden">crm</span>
-
-        </div>
 
 
-
-        <div class="w-full flex items-center justify-end md:justify-between h-fit p-0">
+        <div class=" theme-flex justify-end md:justify-between h-fit p-0">
           <el-breadcrumb :style="breadcrumbStyle" separator="/" class="hidden md:block">
             <el-breadcrumb-item v-for="(breadcrumb, index) in breadcrumbs" :key="index">
               <span v-if="breadcrumb?.label === 'Dashboard' || breadcrumb?.label === 'dashboard'">Dashboard </span>
@@ -89,7 +88,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
               <!--            <div size="default" class="cursor-pointer font-extrabold flex gap-2 h-12 px-2  w-fit rounded text-white items-center justify-center"  >-->
               <!--              <span>{{authData?.user?.first_name[0]}}</span> <span>{{authData?.user?.last_name[0]}}</span>-->
               <!--            </div>-->
-              <div class=" font-bold bg-[#fc7c04] rounded-full h-[3rem] w-[3rem] p-2 flex items-center justify-center cursor-pointer text-[#fc7c04]">
+              <div class=" font-bold primary-bg rounded-full h-[3rem] w-[3rem] p-2 flex items-center justify-center cursor-pointer text-[#fc7c04]">
                 <div class="flex p-0 items-center w-full h-fit mt-2  text-center  text-white justify-center ">
                   {{authData?.user?.first_name[0]}} {{authData?.user?.last_name[0]}}
                 </div>
@@ -99,7 +98,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
 
             <template #default>
               <div class="w-full border-t flex flex-col gap-2 py-2">
-                <div class="flex flex-col p-2 bg-gray-100 capitalize items-center justify-center hover:bg-gray-200 cursor-pointer rounded-md">
+                <div class="flex flex-col p-2 primary-bg capitalize items-center justify-center hover:primary-bg-hover cursor-pointer rounded-md">
                   <p class="w-full">
                     {{authData?.user?.first_name}} {{authData?.user?.last_name}}
 
@@ -137,11 +136,11 @@ watch(route, updateBreadcrumbs, { immediate: true });
 <!--    end top nav-->
 
       <div class="flex h-full w-full">
-        <div class="hidden md:block z-50">
+        <div class="hidden md:block z-50 overflow-y-scroll">
           <TheSideNav/>
         </div>
 
-        <div :style="routerViewStyle" class="flex-1 p-4 bg-gray-50 overflow-x-hidden overflow-y-auto h-full ">
+        <div class="flex-1 p-4 primary-bg overflow-x-hidden overflow-y-auto h-full ">
           <el-breadcrumb separator="/"
                          :style="breadcrumbStyle"
                          class="md:hidden" >
@@ -151,7 +150,11 @@ watch(route, updateBreadcrumbs, { immediate: true });
             </el-breadcrumb-item>
           </el-breadcrumb>
 
+          <div class="h-full w-full">
+
+          </div>
           <router-view :style="routerViewStyle"/>
+
         </div>
 
       </div>

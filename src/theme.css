@@ -17,11 +17,15 @@
     @apply bg-gray-50
 }
 
+.primary-bg-hover {
+    @apply bg-gray-100
+}
+
 /*
 account for mobile
 */
 .theme-flex {
-
+ @apply flex gap-4 items-center justify-center
 }
 
 /*
@@ -36,7 +40,7 @@ account for mobile
 }
 
 .primary-header {
-
+    @apply text-2xl text-blue-500 font-bold
 }
 
 .secondary-header {

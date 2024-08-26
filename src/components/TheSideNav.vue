@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import {useStore} from "vuex";
-import AdminLinks from "@/components/routerLinks/AdminLinks.vue";
-import StoreOwnerLinks from "@/components/routerLinks/StoreOwnerLinks.vue";
+import routerLinks from "@/components/routerLinks/index.vue";
 import TheMobileMenu from "@/components/TheMobileMenu.vue";
 import {useRouter} from "vue-router";
 
@@ -75,21 +74,7 @@ const themeStyle = computed(() => {
         @close="handleClose"
         @select="navigateToSelectedPage"
     >
-      <AdminLinks/>
-    </el-menu>
-
-
-    <el-menu
-        default-active="1"
-        v-if="authData?.user?.user_type === 'store_owner'"
-        class="el-menu-vertical-demo "
-        style="border: none;"
-        :collapse="store.state.sideNavCollapse"
-        @open="handleOpen"
-        @close="handleClose"
-        @select="navigateToSelectedPage"
-    >
-      <StoreOwnerLinks/>
+      <routerLinks/>
     </el-menu>
 
   </div>
@@ -106,20 +91,9 @@ const themeStyle = computed(() => {
           @close="handleClose"
           @select="navigateToSelectedPage"
       >
-        <AdminLinks/>
+        <routerLinks/>
       </el-menu>
 
-      <el-menu
-          default-active="1"
-          v-if="authData?.user?.user_type === 'store_owner'"
-          class="el-menu-vertical-demo "
-          style="border: none;"
-          :collapse="!store.state.sideNavCollapse"
-          @open="handleOpen"
-          @close="handleClose"
-      >
-        <StoreOwnerLinks/>
-      </el-menu>
     </TheMobileMenu>
 
   </div>
