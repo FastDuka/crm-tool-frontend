@@ -98,7 +98,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="right" fixed="right">
+      <el-table-column align="right" width="200" fixed="right">
         <template #header>
           Actions
           <div class="theme-space-large"></div>
