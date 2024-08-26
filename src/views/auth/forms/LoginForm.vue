@@ -39,15 +39,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           })
           .then((resp) => {
             localStorage.setItem("authData", JSON.stringify(resp.data));
+            // console.log(resp.data)
             loginLoading.value = false;
 
             /**
              * Redirect based on user type
              *
              */
-            const user = resp.data?.user;
-
-            router.push({name: 'moves'});
+            router.push({name: 'transaction'});
 
           })
           .catch((err)=>{

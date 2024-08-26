@@ -9,17 +9,17 @@
 
         :scroll="{ x: 1000 }"
         :data="filterTableData" style="width: 100%; border-radius: 5px; ">
-      <el-table-column prop="transaction_id" width="180">
-        <template #header>
-          <div class="theme-flex-col w-full">
-            <h2>Transaction ID</h2>
-            <el-input v-model="search" class="max-w-56"
-                      clearable
-                      placeholder="Type to search" />
-          </div>
+<!--      <el-table-column prop="transaction_id" width="180">-->
+<!--        <template #header>-->
+<!--          <div class="theme-flex-col w-full">-->
+<!--            <h2>Transaction ID</h2>-->
+<!--            <el-input v-model="search" class="max-w-56"-->
+<!--                      clearable-->
+<!--                      placeholder="Type to search" />-->
+<!--          </div>-->
 
-        </template>
-      </el-table-column>
+<!--        </template>-->
+<!--      </el-table-column>-->
 
       <el-table-column width="180" prop="confirmation_number" >
         <template #header>
@@ -30,6 +30,13 @@
                       placeholder="Type to search" />
           </div>
 
+        </template>
+        <template #default="scope">
+          <span v-if="scope.row.transaction_confirmation_number">
+            {{scope.row.transaction_confirmation_number}}
+            {{scope.row.transaction_status}}
+          </span>
+          <span v-else>Null</span>
         </template>
       </el-table-column>
 
@@ -60,6 +67,17 @@
           </div>
 
         </template>
+        <template #default="scope">
+          <el-tag type="success" v-if="scope.row.transaction_status === 'processed'">
+            {{scope.row.transaction_status}}
+          </el-tag>
+          <el-tag type="warning" v-if="scope.row.transaction_status === 'pending'">
+            {{scope.row.transaction_status}}
+          </el-tag>
+          <el-tag type="danger" v-if="scope.row.transaction_status === 'failed'">
+            {{scope.row.transaction_status}}
+          </el-tag>
+        </template>
       </el-table-column>
 
       <el-table-column width="180" prop="payment_method" >
@@ -75,6 +93,12 @@
               />
             </el-select>
           </div>
+
+        </template>
+        <template #default="scope">
+          <span class="capitalize">
+            {{scope.row.payment_method?.name}}
+          </span>
 
         </template>
       </el-table-column>
@@ -96,6 +120,9 @@
           </div>
 
         </template>
+        <template #default="scope">
+          {{formatDate(scope.row?.created_at)}}
+        </template>
       </el-table-column>
 
       <el-table-column align="right" width="100" fixed="right">
@@ -115,13 +142,37 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {View} from "@element-plus/icons-vue";
+import {useStore} from "vuex";
+import { format, parseISO } from 'date-fns'
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+
+  try {
+    const date = parseISO(dateString)
+    return format(date, 'MMM d, yyyy h:mm a')
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return dateString // Return original string if parsing fails
+  }
+}
 
 interface User {
   date: string
   name: string
   address: string
+}
+
+const store = useStore()
+
+const getTransactions = ()=>{
+  store.dispatch('fetchList', {url: "transaction"})
+      .then(res=>{
+        console.log(res?.data?.results)
+        tableData.value = res?.data?.results
+      })
 }
 
 const payment_status = ref([
@@ -138,7 +189,7 @@ const payment_status = ref([
 
 const search = ref('')
 const filterTableData = computed(() =>
-    tableData.filter(
+    tableData.value.filter(
         (data) =>
             !search.value ||
             data.name.toLowerCase().includes(search.value.toLowerCase())
@@ -151,26 +202,9 @@ const handleDelete = (index: number, row: User) => {
   console.log(index, row)
 }
 
-const tableData: User[] = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'John',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Morgan',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Jessy',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+const tableData = ref([])
+
+onMounted(()=>{
+  getTransactions()
+})
 </script>

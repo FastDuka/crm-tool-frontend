@@ -16,9 +16,9 @@ import {deleteLocalStorageInformation} from "@/utility/functions.js";
 api.interceptors.request.use((config) => {
     const authData = JSON.parse(localStorage.getItem("authData"));
 
-    if (authData?.token) {
-        config.headers.Authorization = authData?.token
-            ? "Bearer " + authData?.token
+    if (authData?.access) {
+        config.headers.Authorization = authData?.access
+            ? "Bearer " + authData?.access
             : "";//else
     }
     return config;
