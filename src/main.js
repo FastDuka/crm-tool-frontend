@@ -10,6 +10,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import useLifecycle from '@/composables/useLIfecycle.js';
 import './style.css'
 import './theme.css'
+import {deleteLocalStorageInformation} from "@/utility/functions.js";
 
 
 api.interceptors.request.use((config) => {
@@ -48,7 +49,6 @@ api.interceptors.response.use(undefined, function (err) {
         throw err;
     });
 })
-
 
 const app = createApp(App);
 app.use(router)

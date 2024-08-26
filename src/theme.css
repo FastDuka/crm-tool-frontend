@@ -28,6 +28,14 @@ account for mobile
  @apply flex gap-4 items-center justify-center
 }
 
+.theme-flex-col {
+ @apply flex flex-col gap-4 items-start justify-center
+}
+
+.theme-flex-wrap {
+    @apply flex gap-x-4 gap-y-4 items-start justify-start flex-wrap;
+}
+
 /*
 account for mobile
 */
@@ -35,16 +43,24 @@ account for mobile
 
 }
 
-.theme-space {
-
+.theme-space-large {
+    @apply h-12
 }
 
 .primary-header {
-    @apply text-2xl text-blue-500 font-bold
+    @apply text-3xl font-bold
+}
+
+.primary-text {
+    @apply text-blue-500
+}
+
+.secondary-text {
+    @apply text-gray-500
 }
 
 .secondary-header {
-
+    @apply text-2xl font-bold
 }
 
 .theme-link {

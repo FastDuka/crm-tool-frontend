@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import api from "@/utility/api.js";
-import {baseUrl} from "@/utility/constants.js";
+import {baseUrl, headers} from "@/utility/constants.js";
 import {raiseServerError, showSuccess} from "@/utility/functions.js";
 
 export default createStore({

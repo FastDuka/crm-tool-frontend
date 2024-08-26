@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginView from "@/views/auth/LoginView.vue"
 import RegisterView from "@/views/auth/view/RegisterView.vue"
 import TheDashboardView from "@/components/TheDashboardView.vue";
+import TransactionView from "@/views/transactions/TransactionView.vue";
 
 const routes = [
   {
@@ -12,6 +13,7 @@ const routes = [
     roles: [],
     meta: {
       slug: 'User Registration',
+      requiresAuth: false,
     },
   },
   {
@@ -20,12 +22,27 @@ const routes = [
     component: LoginView,
     meta: {
       slug: 'Login',
+      requiresAuth: false,
     },
   },
   {
     name:'dashboard',
     path: '/dashboard',
     component: TheDashboardView,
+    meta: {
+      requiresAuth: true,
+      slug: 'Dashboard',
+    },
+    children : [
+      {
+        name:'transaction',
+        path: 'transaction',
+        component: TransactionView,
+        meta: {
+          slug: 'Transactions',
+        },
+      },
+    ]
   }
 
 ]

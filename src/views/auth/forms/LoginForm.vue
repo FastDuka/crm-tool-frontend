@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
-// import { LockClosedIcon, UserIcon } from "@/vue-hero-icons/outline";
 import {ElNotification, FormInstance, FormRules} from "element-plus";
 import config from "@/utility/configs.json"
 import {Lock, User} from "@element-plus/icons-vue";
+import store from "@/store/index"
+import router from "@/router/index"
 const loading = ref(false);
 const form = reactive({
 });
 
 
+// const store = useStore();
 const loginLoading = ref(false);
 
 const ruleFormRef = ref<FormInstance>();
@@ -24,6 +26,7 @@ const rules = reactive<FormRules>({
     message: "Please enter password",
   }
 });
+
 const submitForm = async (formEl: FormInstance | undefined) => {
   loginLoading.value = true;
   if (!formEl) return;
@@ -31,7 +34,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       store
           .dispatch("postData", {
-            url: "users/login",
+            url: "token",
             data: form
           })
           .then((resp) => {
@@ -44,46 +47,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
              */
             const user = resp.data?.user;
 
-
-            if (user.user_type == 'sales_person' || user.user_type == 'marketing_person' || user.user_type == 'project_manager' && user.branch_id !== null) {
-              router.push({name: 'moves'});
-            }else if (user.user_type == 'sales_person' || user.user_type == 'marketing_person' || user.user_type == 'project_manager' && user.branch_id == null) {
-
-              ElNotification({
-                title: 'Error',
-                type: "error",
-                position: "top-right",
-                message: 'No Branch Associated.'
-              })
-            }
-
-            if (user.user_type == 'super_admin' || user.user_type == 'firm_owner') {
-              if (user.user_type == 'firm_owner' && user.firm_id == null) {
-                ElNotification({
-                  title: 'Error',
-                  type: "error",
-                  position: "top-right",
-                  message: 'No Firm Associated'
-                })
-
-                return;
-              }
-
-              router.push({name: 'welcome'});
-            }
-
-            if (user.user_type == 'branch_manager' && user.branch_id !== null) {
-              router.push({name: 'branch-view', params: {
-                  id: user?.branch_id}});
-            }
-            else if (user.user_type == 'branch_manager' && user.branch_id == null){
-              ElNotification({
-                title: 'Error',
-                type: "error",
-                position: "top-right",
-                message: 'No Branch Associated'
-              })
-            }
+            router.push({name: 'moves'});
 
           })
           .catch((err)=>{
@@ -92,12 +56,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       ;
     } else {
       loginLoading.value = false;
-      Swal.fire({
-        icon: 'error',
+      ElNotification({
         title: 'Error',
-        html: '<p class="text-red-400">Fill All required Fields</p>',
-        timer: 4000,
-      });
+        type: "error",
+        position: "top-right",
+        message: "Fill required fields"
+      })
     }
     loading.value = false;
   });
@@ -120,24 +84,19 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
     <h2 class="font-bold text-gray-400">Sign In</h2>
 
-    <el-form-item label="Email" prop="email"
+    <el-form-item label="Username" prop="username"
          :rules="[
             {
               required: true,
-              message: 'Please input email address',
-              trigger: 'blur',
-            },
-            {
-              type: 'email',
-              message: 'Please input correct email address',
+              message: 'Please input username',
               trigger: 'blur',
             },
          ]"
     >
       <el-input
-        v-model="form.email"
+        v-model="form.username"
         :prefix-icon="User"
-        placeholder="email"
+        placeholder="username"
         size="large"
       />
     </el-form-item>

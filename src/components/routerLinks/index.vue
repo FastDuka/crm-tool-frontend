@@ -12,11 +12,11 @@ const branchUrl = 'branch-view'
 
 <template>
   <el-menu-item
-      index="payments">
+      index="transaction">
     <el-icon>
       <data-analysis/>
     </el-icon>
-    <template #title>Insights</template>
+    <template #title>Transactions</template>
   </el-menu-item>
 
   <el-sub-menu

@@ -2,7 +2,7 @@
 
 import {ref} from "vue"
 import TheSideNav from "@/components/TheSideNav.vue";
-import { UserFilled} from "@element-plus/icons-vue";
+import {Expand, Fold, Umbrella, UserFilled} from "@element-plus/icons-vue";
 import {useStore} from "vuex";
 import {deleteLocalStorageInformation} from "@/utility/functions.js";
 import {useRouter, useRoute} from "vue-router";
@@ -52,16 +52,18 @@ watch(route, updateBreadcrumbs, { immediate: true });
 <!--    h-[70px]-->
       <div class=" border-b w-full flex items-center justify-between gap-4 px-4">
         <div class="h-fit w-fit theme-flex">
-          <div class=" h-[70px]  theme-flex primary-header">
+          <div class=" h-[70px]  theme-flex secondary-header primary-text">
             {{config.appName}}
           </div>
 
           <div class="h-[70px] w-fit md:flex items-center  hidden">
             <el-button class="w-[40px] bg-amber-600"
                        @click="store.state.sideNavCollapse = !store.state.sideNavCollapse">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5" />
-              </svg>
+<!--              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">-->
+<!--                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5" />-->
+<!--              </svg>-->
+              <expand class="h-6" v-if="store.state.sideNavCollapse" />
+              <fold class="h-6" v-else />
             </el-button>
           </div>
         </div>
@@ -140,7 +142,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
           <TheSideNav/>
         </div>
 
-        <div class="flex-1 p-4 primary-bg overflow-x-hidden overflow-y-auto h-full ">
+        <div class="flex-1 p-4 md:p-0 primary-bg overflow-x-hidden overflow-y-auto h-full ">
           <el-breadcrumb separator="/"
                          :style="breadcrumbStyle"
                          class="md:hidden" >
@@ -150,10 +152,9 @@ watch(route, updateBreadcrumbs, { immediate: true });
             </el-breadcrumb-item>
           </el-breadcrumb>
 
-          <div class="h-full w-full">
-
+          <div class="p-2">
+            <router-view :style="routerViewStyle"/>
           </div>
-          <router-view :style="routerViewStyle"/>
 
         </div>
 
