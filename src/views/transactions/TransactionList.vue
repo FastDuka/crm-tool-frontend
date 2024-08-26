@@ -9,7 +9,7 @@
 
         :scroll="{ x: 1000 }"
         :data="filterTableData" style="width: 100%; border-radius: 5px; ">
-      <el-table-column prop="transaction_id" >
+      <el-table-column prop="transaction_id" width="180">
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Transaction ID</h2>
@@ -21,7 +21,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="confirmation_number" >
+      <el-table-column width="180" prop="confirmation_number" >
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Confirmation Number</h2>
@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="amount" >
+      <el-table-column width="180" prop="amount" >
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Amount</h2>
@@ -45,7 +45,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="status" >
+      <el-table-column width="180" prop="status" >
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Status</h2>
@@ -62,7 +62,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="payment_method" >
+      <el-table-column width="180" prop="payment_method" >
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Payment Method</h2>
@@ -79,7 +79,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="date" >
+      <el-table-column width="180"   prop="date" >
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Date</h2>
