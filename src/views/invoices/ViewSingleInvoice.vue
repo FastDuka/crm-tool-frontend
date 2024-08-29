@@ -2,9 +2,9 @@
 import store from "@/store/index.js";
 import { useRoute } from "vue-router";
 import { onMounted, ref, watch } from "vue";
-import axios from "axios"; // Import axios for HTTP requests
 import { formatDate } from "@/utility/functions.js";
 import { Plus } from "@element-plus/icons-vue";
+import BaseDialog from "@/components/base/BaseDialog.vue";
 
 const route = useRoute();
 const tableData = ref([]);
@@ -80,129 +80,134 @@ onMounted(() => {
 
 
 <template>
-  <div class="flex flex-col gap-4 p-2 justify-start items-start bg-white overflow-x-auto h-full">
-    <!--    organization details -->
-    <div class="rounded-xl bg-gray-900 text-white flex flex-wrap gap-4 justify-between p-4 w-full">
-      <!--  logo and email    -->
-      <div class="flex flex-wrap gap-4 py-2 w-full md:w-fit">
-        <el-avatar size="large" :src="organisationDetails?.logo"
-        >Fast</el-avatar>
+  <BaseDialog>
+    <template #content>
+      <div class="flex flex-col gap-4 p-2 justify-start items-start bg-white overflow-x-auto h-full">
+        <!--    organization details -->
+        <div class="rounded-xl bg-gray-900 text-white flex flex-wrap gap-4 justify-between p-4 w-full">
+          <!--  logo and email    -->
+          <div class="flex flex-wrap gap-4 py-2 w-full md:w-fit">
+            <el-avatar size="large" :src="organisationDetails?.logo"
+            >Fast</el-avatar>
 
-        <div class="font-bold text-lg w-fit">{{organisationDetails?.organization_name}}</div>
+            <div class="font-bold text-lg w-fit">{{organisationDetails?.organization_name}}</div>
 
-      </div>
+          </div>
 
-      <div class="flex flex-col gap-4">
-        <div>{{organisationDetails?.email}}</div>
-        <div>{{organisationDetails?.phone}}</div>
-      </div>
-    </div>
-
-    <!--    invoice details -->
-    <div class="rounded-lg bg-gray-100 text-black flex flex-wrap gap-4 justify-between p-4 w-full">
-      <!--  logo and email    -->
-      <div class="flex flex-col gap-4">
-        <div class="text-lg font-bold">{{invoiceDetails?.invoice_number}}</div>
-        <div>{{invoiceDetails?.account_number}}</div>
-        <div>{{formatDate(invoiceDetails?.issue_date)}}</div>
-        <div>due date</div>
-      </div>
-
-      <div class="flex flex-col gap-4">
-        <div class="text-lg font-bold">Billed To</div>
-        <div>{{customerDetails?.name}}</div>
-        <div>{{customerDetails?.email}}</div>
-        <div>{{customerDetails?.phone}}</div>
-      </div>
-    </div>
-
-    <!--    table-->
-    <div class="flex flex-col gap-4 w-full">
-      <h2 class="text-lg font-bold text-black">
-        Item Details
-      </h2>
-
-      <div class="flex flex-col items-center gap-4 w-full">
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="name" label="Name" width="180">
-            <template #default="{ row }">
-              <el-input v-model="row.name" placeholder="Enter name"  />
-            </template>
-          </el-table-column>
-          <el-table-column prop="quantity" label="Quantity" width="180">
-            <template #default="{ row }">
-              <el-input-number v-model="row.quantity" :min="0"  />
-            </template>
-          </el-table-column>
-          <el-table-column prop="unit_price" label="Unit Price" width="180">
-            <template #default="{ row }">
-              <el-input-number v-model="row.unit_price" :min="0" />
-            </template>
-          </el-table-column>
-          <el-table-column prop="taxable_percentage" label="Taxable Percentage" width="180">
-            <template #default="{ row }">
-              <el-input-number v-model="row.taxable_percentage" :min="0" :max="100"  />
-            </template>
-          </el-table-column>
-          <el-table-column prop="net_total" label="Net Total" width="180">
-            <template #default="{ row }">
-              <el-input-number v-model="row.net_total" :min="0"  />
-            </template>
-          </el-table-column>
-          <el-table-column prop="total_tax" label="Total Tax" width="180">
-            <template #default="{ row }">
-              <el-input-number v-model="row.total_tax" :min="0"  />
-            </template>
-          </el-table-column>
-          <el-table-column prop="total" label="Total" min-width="160">
-            <template #default="{ row }">
-              <el-input-number v-model="row.total" :min="0" />
-            </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="Operations" min-width="100">
-            <template #default="{ $index }">
-              <el-button link type="primary" size="small" @click="removeRow($index)">Delete</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <div class="w-full flex px-2 ">
-          <el-button size="large" circle type="primary" @click="addRow">
-            <Plus class="h-6 w-6"/>
-          </el-button>
+          <div class="flex flex-col gap-4">
+            <div>{{organisationDetails?.email}}</div>
+            <div>{{organisationDetails?.phone}}</div>
+          </div>
         </div>
 
-      </div>
-    </div>
+        <!--    invoice details -->
+        <div class="rounded-lg bg-gray-100 text-black flex flex-wrap gap-4 justify-between p-4 w-full">
+          <!--  logo and email    -->
+          <div class="flex flex-col gap-4">
+            <div class="text-lg font-bold">{{invoiceDetails?.invoice_number}}</div>
+            <div>{{invoiceDetails?.account_number}}</div>
+            <div>{{formatDate(invoiceDetails?.issue_date)}}</div>
+            <div>due date</div>
+          </div>
 
-    <div class="flex flex-col gap-4  w-full">
-      <div class="flex font-bold w-full justify-end p-2">
-        <div class="flex w-fit gap-4 items-center">
-          <h3>Total Billed</h3>
-          <h3>KES {{invoiceDetails?.total_billed}}</h3>
+          <div class="flex flex-col gap-4">
+            <div class="text-lg font-bold">Billed To</div>
+            <div>{{customerDetails?.name}}</div>
+            <div>{{customerDetails?.email}}</div>
+            <div>{{customerDetails?.phone}}</div>
+          </div>
         </div>
-      </div>
-      <div class="flex w-full justify-end p-2">
-        <div class="flex w-fit gap-4 items-center">
-          <h3>Tax</h3>
-          <h3>{{invoiceDetails?.total_tax}}</h3>
+
+        <!--    table-->
+        <div class="flex flex-col gap-4 w-full">
+          <h2 class="text-lg font-bold text-black">
+            Item Details
+          </h2>
+
+          <div class="flex flex-col items-center gap-4 w-full">
+            <el-table :data="tableData" style="width: 100%">
+              <el-table-column prop="name" label="Name" width="180">
+                <template #default="{ row }">
+                  <el-input v-model="row.name" placeholder="Enter name"  />
+                </template>
+              </el-table-column>
+              <el-table-column prop="quantity" label="Quantity" width="180">
+                <template #default="{ row }">
+                  <el-input-number v-model="row.quantity" :min="0"  />
+                </template>
+              </el-table-column>
+              <el-table-column prop="unit_price" label="Unit Price" width="180">
+                <template #default="{ row }">
+                  <el-input-number v-model="row.unit_price" :min="0" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="taxable_percentage" label="Taxable Percentage" width="180">
+                <template #default="{ row }">
+                  <el-input-number v-model="row.taxable_percentage" :min="0" :max="100"  />
+                </template>
+              </el-table-column>
+              <el-table-column prop="net_total" label="Net Total" width="180">
+                <template #default="{ row }">
+                  <el-input-number v-model="row.net_total" :min="0"  />
+                </template>
+              </el-table-column>
+              <el-table-column prop="total_tax" label="Total Tax" width="180">
+                <template #default="{ row }">
+                  <el-input-number v-model="row.total_tax" :min="0"  />
+                </template>
+              </el-table-column>
+              <el-table-column prop="total" label="Total" min-width="160">
+                <template #default="{ row }">
+                  <el-input-number v-model="row.total" :min="0" />
+                </template>
+              </el-table-column>
+              <el-table-column fixed="right" label="Operations" min-width="100">
+                <template #default="{ $index }">
+                  <el-button link type="primary" size="small" @click="removeRow($index)">Delete</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <div class="w-full flex px-2 ">
+              <el-button size="large" circle type="primary" @click="addRow">
+                <Plus class="h-6 w-6"/>
+              </el-button>
+            </div>
+
+          </div>
         </div>
-      </div>
-      <div class="flex w-full justify-end p-2">
-        <div class="flex w-fit gap-4 items-center border-t text-lg font-bold text-black pt-2">
-          <h3>Total Paid</h3>
-          <h3>KES
-            {{ invoiceDetails?.payment_information && Array.isArray(invoiceDetails.payment_information)
-                ? invoiceDetails.payment_information.reduce((total, item) => total + Number(item.amount || 0), 0)
-                : 0
-            }}
-          </h3>
+
+        <div class="flex flex-col gap-4  w-full">
+          <div class="flex font-bold w-full justify-end p-2">
+            <div class="flex w-fit gap-4 items-center">
+              <h3>Total Billed</h3>
+              <h3>KES {{invoiceDetails?.total_billed}}</h3>
+            </div>
+          </div>
+          <div class="flex w-full justify-end p-2">
+            <div class="flex w-fit gap-4 items-center">
+              <h3>Tax</h3>
+              <h3>{{invoiceDetails?.total_tax}}</h3>
+            </div>
+          </div>
+          <div class="flex w-full justify-end p-2">
+            <div class="flex w-fit gap-4 items-center border-t text-lg font-bold text-black pt-2">
+              <h3>Total Paid</h3>
+              <h3>KES
+                {{ invoiceDetails?.payment_information && Array.isArray(invoiceDetails.payment_information)
+                    ? invoiceDetails.payment_information.reduce((total, item) => total + Number(item.amount || 0), 0)
+                    : 0
+                }}
+              </h3>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
 
-  </div>
+      </div>
+    </template>
+  </BaseDialog>
+
 </template>
 
 <style scoped>
