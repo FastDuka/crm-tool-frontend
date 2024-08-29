@@ -4,6 +4,8 @@ import RegisterView from "@/views/auth/view/RegisterView.vue"
 import TheDashboardView from "@/components/TheDashboardView.vue";
 import TransactionView from "@/views/transactions/TransactionView.vue";
 import ViewSingleInvoice from "@/views/invoices/ViewSingleInvoice.vue";
+import InvoiceList from "@/views/invoices/InvoiceList.vue";
+import CustomerList from "@/views/customers/CustomerList.vue";
 
 const routes = [
   {
@@ -45,11 +47,39 @@ const routes = [
       },
       {
         name:'invoice',
-        path: 'invoice/:id',
-        component: ViewSingleInvoice,
+        path: 'invoice',
+        component: InvoiceList,
         meta: {
-          slug: 'Invoice',
+          slug: 'Invoices',
         },
+        children: [
+          {
+            name:'invoice-view',
+            path: ':id',
+            component: ViewSingleInvoice,
+            meta: {
+              slug: 'Detailed Invoice View',
+            },
+          },
+        ]
+      },
+      {
+        name:'customer',
+        path: 'customer',
+        component: CustomerList,
+        meta: {
+          slug: 'Customers',
+        },
+        children: [
+          {
+            name:'invoice-view',
+            path: ':id',
+            component: ViewSingleInvoice,
+            meta: {
+              slug: 'Detailed Invoice View',
+            },
+          },
+        ]
       },
     ]
   }

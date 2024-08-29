@@ -1,65 +1,49 @@
 <template>
-  <div :class="{ 'dark-mode': !$store.getters.getLightMode }" class="px-2 pb-2">
-    <div class="flex flex-col w-full h-full">
-      <a-table
-          :columns="columns"
-          :data-source="dataSource"
-          :scroll="{ x: 1000 }"
-          :loading="loading"
+  <div :class="{ 'dark-mode': !$store.getters.getLightMode }">
+    <base-loader v-if="loading"/>
+    <div v-else class="flex flex-col w-full h-full bg-white p-2 rounded-lg">
+      <el-table
+          :data="dataSource.results"
+          :style="{ width: '100%' }"
           :row-key="(record) => record?.id"
+          :loading="loading"
+          :scroll="{ x: 1000 }"
       >
-        <template #bodyCell="{ column, text }" class="w-full">
-          <slot :column="column" :text="text" name="bodyCell"></slot>
+        <template #default="{ row, column, $index }">
+          <el-table-column
+              v-for="col in columns"
+              :key="col.prop"
+              :prop="col.prop"
+              :label="col.label"
+              :min-width="col.minWidth"
+          >
+            <template #default="{ row }" v-if="!loading">
+              <slot :column="col" :text="row[col.prop]" name="bodyCell"></slot>
+            </template>
+          </el-table-column>
         </template>
-        <template #title>
-          <div class="w-full py-4 flex flex-col md:justify-between  md:flex-row flex-wrap gap-4
-                 bg-white border-b rounded-t border-b-gray-100 md:items-center">
-            <div class="font-bold text-xl text-gray-600">{{ title }}</div>
-            <el-input placeholder="Search"
-                      v-if="showSearch"
-                      size="small"
-                      class="text-lg h-12 rounded hidden md:block md:w-[300px] w-full "></el-input>
-            <div v-else></div>
-            <div class="flex flex-col md:flex-row gap-6">
-              <slot v-if="showOtherItems" name="otherItems"></slot>
-              <router-link v-if="createRouteName !== undefined" :to="{ name: createRouteName }">
-                <ElButton size="large" type="primary" class="">
-                  <template #icon>
-                    <PlusOutlined class="h-fit"/>
-                  </template>
-                  <span>Add New</span>
-                </ElButton>
-              </router-link>
-              <div class="flex items-start gap-4 justify-between font-bold text-gray-800">
-                <ElButton size="large" @click="toggleFilters">
-                  <template #icon v-if="!showFilters">
-                    <FilterOutlined class="h-fit"/>
-                  </template>
-                  <template #icon v-if="showFilters">
-                    <FilterFilled class="h-fit"/>
-                  </template>
-                </ElButton>
-                <ElButton size="large" @click="refresh">
-                  <template #icon>
-                    <ReloadOutlined></ReloadOutlined>
-                  </template>
-                </ElButton>
-              </div>
-            </div>
-            <ElInput v-if="showSearch" style="width: 300px" placeholder="Search" class="text-lg h-12 rounded  md:hidden"></ElInput>
-          </div>
-          <div v-if="showFilters || showOtherItems" class="flex w-full py-4 gap-2 bg-white justify-start">
-            <slot name="filters"></slot>
-          </div>
+        <template #header>
+          <!-- Header content here -->
         </template>
-      </a-table>
+      </el-table>
+      <!-- Pagination controls -->
+      <div class="flex justify-end mt-4">
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handlePageChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalRecords"
+            layout="total, prev, pager, next, jumper"
+        />
+      </div>
     </div>
   </div>
 </template>
 
-<script >
-import store from "../../store"
-import {Table} from "ant-design-vue"
+<script>
+import store from "../../store";
+import { ElTable, ElPagination } from "element-plus";
 import {
   FilterFilled,
   FilterOutlined,
@@ -67,24 +51,32 @@ import {
   ReloadOutlined,
   SettingOutlined,
 } from "@ant-design/icons-vue";
-import {defineEmits} from 'vue'
-
+import { defineEmits, ref } from "vue";
+import BaseLoader from "@/components/base/BaseLoader.vue";
 
 export default {
   name: "BaseTable",
   components: {
+    BaseLoader,
     PlusOutlined,
     ReloadOutlined,
     SettingOutlined,
     FilterOutlined,
     FilterFilled,
-    Table
+    ElTable,
+    ElPagination
   },
   data() {
     return {
-      dataSource: [],
+      dataSource: {
+        results: [],
+        count: 0
+      },
       showFilters: false,
-      loading: true,
+      loading: false,
+      currentPage: 1,
+      pageSize: 10,
+      totalRecords: 0,
     };
   },
   props: {
@@ -103,63 +95,73 @@ export default {
     showOtherItems: {
       type: Boolean,
       default: false,
-    }, showSearch: {
+    },
+    showSearch: {
       type: Boolean,
       default: false,
     },
     columns: {
       type: Array,
-      default: () => {
-        return [
-          {
-            title: "Name",
-            dataIndex: "firstName",
-            sorter: true,
-            width: "20%",
-          },
-          {
-            title: "Email",
-            dataIndex: "email",
-          },
-        ];
-      },
+      default: () => [
+        {
+          title: "Name",
+          dataIndex: "firstName",
+          sorter: true,
+          width: "20%",
+        },
+        {
+          title: "Email",
+          dataIndex: "email",
+        },
+      ],
     },
   },
   methods: {
     emit() {
       return defineEmits(['trailingReload'])
     },
-    queryData(url) {
+    queryData(url, page = this.currentPage, pageSize = this.pageSize) {
       this.loading = true;
 
       store
-          .dispatch("fetchList", {url})
+          .dispatch("fetchList", { url: `${url}\?page=${this.currentPage}&page_size=${this.pageSize}` })
           .then((resp) => {
+            console.log('Data received:', resp.data);
             this.dataSource = resp.data;
+            this.totalRecords = resp.data.count;
             this.loading = false;
           })
-          .catch(() => {
+          .catch((error) => {
+            console.error('Error fetching data:', error);
             this.loading = false;
           });
     },
+    handleSizeChange(size) {
+      this.pageSize = size;
+      this.queryData(this.fetchUrl, this.currentPage, this.pageSize);
+    },
+    handlePageChange(page) {
+      this.currentPage = page;
+      this.queryData(this.fetchUrl, this.currentPage, this.pageSize);
+    },
     toggleFilters() {
-      this.showFilters = !this.showFilters
+      this.showFilters = !this.showFilters;
     },
     refresh() {
-      this.queryData(this.fetchUrl);
-      this.trailingReload()
+      this.queryData(this.fetchUrl, this.currentPage, this.pageSize);
+      this.trailingReload();
     },
     trailingReload() {
-      this.$emit('trailingReload')
+      this.$emit('trailingReload');
     }
   },
   watch: {
-    fetchUrl: function (newVal, oldVal) {
-      this.queryData(this.fetchUrl);
+    fetchUrl(newVal) {
+      this.queryData(newVal, this.currentPage, this.pageSize);
     }
   },
   mounted() {
-    this.queryData(this.fetchUrl);
+    this.queryData(this.fetchUrl, this.currentPage, this.pageSize);
   },
 };
 </script>
