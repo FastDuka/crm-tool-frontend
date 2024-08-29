@@ -203,7 +203,10 @@ export default createStore({
     setLightMode(state) {
       state.lightMode = !state.lightMode
       console.log(state.lightMode)
-    }
+    },
+      SET_SHOW_MOBILE_MENU(state, show) {
+          state.ShowMobileMenu = show;
+      }
   },
   getters:{
     getSideBarCollapse(state){
