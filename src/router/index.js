@@ -72,7 +72,7 @@ const routes = [
         },
         children: [
           {
-            name:'invoice-view',
+            name:'customer-view',
             path: ':id',
             component: ViewSingleInvoice,
             meta: {

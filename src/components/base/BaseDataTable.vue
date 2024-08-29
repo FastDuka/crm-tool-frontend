@@ -27,7 +27,7 @@
         </template>
       </el-table>
       <!-- Pagination controls -->
-      <div class="flex justify-end mt-4">
+      <div class="flex justify-end mt-4 pb-4 overflow-x-auto">
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handlePageChange"
