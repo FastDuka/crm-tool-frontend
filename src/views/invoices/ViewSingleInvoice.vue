@@ -82,15 +82,14 @@ onMounted(() => {
 <template>
   <div class="flex flex-col gap-4 p-2 justify-start items-start bg-white overflow-x-auto h-full">
     <!--    organization details -->
-    <div class="rounded-lg bg-gray-900 text-white flex justify-between p-4 w-full">
+    <div class="rounded-xl bg-gray-900 text-white flex flex-wrap gap-4 justify-between p-4 w-full">
       <!--  logo and email    -->
-      <div class="flex gap-4 p-4">
+      <div class="flex flex-wrap gap-4 py-2 w-full md:w-fit">
         <el-avatar size="large" :src="organisationDetails?.logo"
         >Fast</el-avatar>
 
-        <div class="flex flex-col gap-4">
-          <div class="font-bold text-lg">{{organisationDetails?.organization_name}}</div>
-        </div>
+        <div class="font-bold text-lg w-fit">{{organisationDetails?.organization_name}}</div>
+
       </div>
 
       <div class="flex flex-col gap-4">
@@ -100,7 +99,7 @@ onMounted(() => {
     </div>
 
     <!--    invoice details -->
-    <div class="rounded-lg bg-gray-100 text-black flex justify-between p-4 w-full">
+    <div class="rounded-lg bg-gray-100 text-black flex flex-wrap gap-4 justify-between p-4 w-full">
       <!--  logo and email    -->
       <div class="flex flex-col gap-4">
         <div class="text-lg font-bold">{{invoiceDetails?.invoice_number}}</div>
@@ -125,39 +124,39 @@ onMounted(() => {
 
       <div class="flex flex-col items-center gap-4 w-full">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="name" label="Name" width="160">
+          <el-table-column prop="name" label="Name" width="180">
             <template #default="{ row }">
-              <el-input v-model="row.name" placeholder="Enter name" size="small" />
+              <el-input v-model="row.name" placeholder="Enter name"  />
             </template>
           </el-table-column>
-          <el-table-column prop="quantity" label="Quantity" width="160">
+          <el-table-column prop="quantity" label="Quantity" width="180">
             <template #default="{ row }">
-              <el-input-number v-model="row.quantity" :min="0" size="small" />
+              <el-input-number v-model="row.quantity" :min="0"  />
             </template>
           </el-table-column>
-          <el-table-column prop="unit_price" label="Unit Price" width="160">
+          <el-table-column prop="unit_price" label="Unit Price" width="180">
             <template #default="{ row }">
-              <el-input-number v-model="row.unit_price" :min="0" size="small" />
+              <el-input-number v-model="row.unit_price" :min="0" />
             </template>
           </el-table-column>
-          <el-table-column prop="taxable_percentage" label="Taxable Percentage" width="160">
+          <el-table-column prop="taxable_percentage" label="Taxable Percentage" width="180">
             <template #default="{ row }">
-              <el-input-number v-model="row.taxable_percentage" :min="0" :max="100" size="small" />
+              <el-input-number v-model="row.taxable_percentage" :min="0" :max="100"  />
             </template>
           </el-table-column>
-          <el-table-column prop="net_total" label="Net Total" width="160">
+          <el-table-column prop="net_total" label="Net Total" width="180">
             <template #default="{ row }">
-              <el-input-number v-model="row.net_total" :min="0" size="small" />
+              <el-input-number v-model="row.net_total" :min="0"  />
             </template>
           </el-table-column>
-          <el-table-column prop="total_tax" label="Total Tax" width="160">
+          <el-table-column prop="total_tax" label="Total Tax" width="180">
             <template #default="{ row }">
-              <el-input-number v-model="row.total_tax" :min="0" size="small" />
+              <el-input-number v-model="row.total_tax" :min="0"  />
             </template>
           </el-table-column>
-          <el-table-column prop="total" label="Total" min-width="120">
+          <el-table-column prop="total" label="Total" min-width="160">
             <template #default="{ row }">
-              <el-input-number v-model="row.total" :min="0" size="small" />
+              <el-input-number v-model="row.total" :min="0" />
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="Operations" min-width="100">
@@ -193,10 +192,10 @@ onMounted(() => {
         <div class="flex w-fit gap-4 items-center border-t text-lg font-bold text-black pt-2">
           <h3>Total Paid</h3>
           <h3>KES
-            {{invoiceDetails?.payment_information?.reduce((total, item) => {
-            return total + Number(item.amount || 0);
-            }, 0)
-                }}
+            {{ invoiceDetails?.payment_information && Array.isArray(invoiceDetails.payment_information)
+                ? invoiceDetails.payment_information.reduce((total, item) => total + Number(item.amount || 0), 0)
+                : 0
+            }}
           </h3>
         </div>
       </div>
