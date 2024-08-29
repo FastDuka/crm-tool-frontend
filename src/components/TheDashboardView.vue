@@ -48,7 +48,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
 <template>
   <div class="h-full min-w-screen max-w-screen-md" style="max-width: 100vw">
 
-  <div class=" flex flex-col  min-w-full  h-screen items-center">
+  <div class=" flex flex-col  min-w-full  h-full items-center">
 <!--    h-[70px]-->
       <div class=" border-b w-full flex items-center justify-between gap-4 px-4">
         <div class="h-fit w-fit theme-flex">
@@ -142,7 +142,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
           <TheSideNav/>
         </div>
 
-        <div class="flex-1 p-4 md:p-0 primary-bg overflow-x-hidden overflow-y-auto h-full ">
+        <div class=" w-full  p-4 md:p-0 primary-bg overflow-x-hidden overflow-y-auto h-full ">
           <el-breadcrumb separator="/"
                          :style="breadcrumbStyle"
                          class="md:hidden" >
@@ -152,7 +152,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
             </el-breadcrumb-item>
           </el-breadcrumb>
 
-          <div class="p-2">
+          <div class="p-2 flex-grow flex-1 h-full w-full">
             <router-view :style="routerViewStyle"/>
           </div>
 

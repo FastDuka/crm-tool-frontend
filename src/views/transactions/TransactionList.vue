@@ -21,7 +21,7 @@
 <!--        </template>-->
 <!--      </el-table-column>-->
 
-      <el-table-column width="180" prop="confirmation_number" >
+      <el-table-column width="200" prop="confirmation_number" >
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Confirmation Number</h2>
@@ -103,7 +103,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="180"   prop="date" >
+      <el-table-column min-width="180"   prop="date" >
         <template #header>
           <div class="theme-flex-col w-full">
             <h2>Date</h2>

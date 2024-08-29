@@ -3,6 +3,7 @@ import LoginView from "@/views/auth/LoginView.vue"
 import RegisterView from "@/views/auth/view/RegisterView.vue"
 import TheDashboardView from "@/components/TheDashboardView.vue";
 import TransactionView from "@/views/transactions/TransactionView.vue";
+import ViewSingleInvoice from "@/views/invoices/ViewSingleInvoice.vue";
 
 const routes = [
   {
@@ -40,6 +41,14 @@ const routes = [
         component: TransactionView,
         meta: {
           slug: 'Transactions',
+        },
+      },
+      {
+        name:'invoice',
+        path: 'invoice/:id',
+        component: ViewSingleInvoice,
+        meta: {
+          slug: 'Invoice',
         },
       },
     ]
