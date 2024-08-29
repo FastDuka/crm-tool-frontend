@@ -45,7 +45,7 @@ const themeStyle = computed(() => {
         '--background-color': 'white',
         '--text-color': 'black',
         '--hover-background-color': '#f5f5f5',
-        '--active-background-color': '#e0e0e0',
+        '--active-background-color': '#862727',
         '--active-text-color': '#ffd04b'
       };
 });
@@ -63,10 +63,10 @@ const themeStyle = computed(() => {
     <el-menu
         default-active="1"
         :class="{'light-mode': store.getters.getLightMode, 'dark-mode': !store.getters.getLightMode}"
-        class="el-menu-vertical-demo "
+        class="el-menu-vertical-demo pr-4"
         style="border: none;"
         :active-text-color="store.getters.getLightMode ? 'blue' : '#ffd04b'"
-        :background-color="store.getters.getLightMode ? 'white' : 'gray'"
+        :active-background-color="store.getters.getLightMode ? 'red' : 'gray'"
         :text-color="store.getters.getLightMode ? 'black' : 'black'"
         :style="themeStyle"
         :collapse="store.state.sideNavCollapse"
@@ -192,3 +192,21 @@ const themeStyle = computed(() => {
 <!--}-->
 <!--</style>-->
 
+<style scoped>
+.--el-menu-bg-color {
+  background-color: #545c64;
+}
+.el-menu-vertical-demo .el-menu-item.is-active,
+.el-menu-vertical-demo .el-submenu__title.is-active {
+  background-color: var(--active-background-color);
+}
+
+/* Drop-down menu item active styles */
+.el-menu-vertical-demo .el-submenu .el-menu-item.is-active {
+  background-color: var(--active-background-color);
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) .el-submenu .el-menu-item.is-active {
+  background-color: var(--active-background-color);
+}
+</style>

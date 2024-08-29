@@ -153,7 +153,13 @@ const branchUrl = 'branch-view'
 
   </el-sub-menu>
 
-
+  <el-menu-item
+      index="organization">
+    <el-icon>
+      <setting/>
+    </el-icon>
+    <template #title>Organization</template>
+  </el-menu-item>
 
 </template>
 
