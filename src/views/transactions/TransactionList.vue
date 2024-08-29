@@ -168,14 +168,19 @@
     </el-table>
 
     <!-- Pagination -->
-    <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="totalTransactions"
-    />
+    <div
+        class="max-w-full pb-4 overflow-x-auto"
+    >
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalTransactions"
+      />
+    </div>
+
   </div>
 </template>
 
