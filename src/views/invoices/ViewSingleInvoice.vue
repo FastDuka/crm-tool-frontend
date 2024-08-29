@@ -104,7 +104,8 @@ onMounted(() => {
         <div class="rounded-lg bg-gray-100 text-black flex flex-wrap gap-4 justify-between p-4 w-full">
           <!--  logo and email    -->
           <div class="flex flex-col gap-4">
-            <div class="text-lg font-bold">{{invoiceDetails?.invoice_number}}</div>
+            <div class="text-lg font-bold">Invoice Number</div>
+            <div>{{invoiceDetails?.invoice_number}}</div>
             <div>{{invoiceDetails?.account_number}}</div>
             <div>{{formatDate(invoiceDetails?.issue_date)}}</div>
             <div>due date</div>
