@@ -12,7 +12,7 @@ const accountObj = ref(
 );
 
 const orgarnizationObj = ref({
-  organization_name: 'School Name',
+  organization_name: 'Mavindini Boys',
   email: 'Mavindini@gmail.com',
   phone: '1234567890',
   industry :{
@@ -37,6 +37,8 @@ const paymentDetailsLoader = ref(false);
 <template>
   <div class="theme-flex-col">
     <h2 class="primary-header">Profile</h2>
+
+    <router-view/>
 
     <div class="w-full border rounded-lg theme-flex-col p-4">
       <div class="flex justify-between w-full">

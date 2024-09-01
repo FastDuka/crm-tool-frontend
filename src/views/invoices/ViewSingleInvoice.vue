@@ -3,7 +3,7 @@ import store from "@/store/index.js";
 import { useRoute } from "vue-router";
 import { onMounted, ref, watch } from "vue";
 import { formatDate } from "@/utility/functions.js";
-import { Plus } from "@element-plus/icons-vue";
+import {Delete, Plus} from "@element-plus/icons-vue";
 import BaseDialog from "@/components/base/BaseDialog.vue";
 
 const route = useRoute();
@@ -162,9 +162,9 @@ onMounted(() => {
                   <el-input-number v-model="row.total" :min="0" />
                 </template>
               </el-table-column>
-              <el-table-column fixed="right" label="Operations" min-width="100">
+              <el-table-column fixed="right" label="Actions" min-width="80">
                 <template #default="{ $index }">
-                  <el-button link type="primary" size="small" @click="removeRow($index)">Delete</el-button>
+                  <el-button type="danger" :icon="Delete" circle size="large" @click="removeRow($index)"></el-button>
                 </template>
               </el-table-column>
             </el-table>

@@ -137,12 +137,12 @@ watch(route, updateBreadcrumbs, { immediate: true });
         </div>
   <!--    end top nav-->
 
-        <div class="flex flex-1 h-full w-full">
-          <div class="hidden md:block z-50 overflow-y-scroll">
+        <div class="flex flex-1 w-full h-screen">
+          <div class="hidden md:block z-50 overflow-y-scroll md:overflow-x-hidden">
             <TheSideNav/>
           </div>
 
-          <div class=" w-full  p-4 md:p-0 primary-bg overflow-x-hidden overflow-y-auto h-full ">
+          <div class=" w-full  p-4 md:p-0 primary-bg overflow-x-hidden h-full ">
             <el-breadcrumb separator="/"
                            :style="breadcrumbStyle"
                            class="md:hidden" >
