@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-import LoginView from "@/views/auth/LoginView.vue"
+import LoginView from "@/views/auth/view/LoginView.vue"
 import RegisterView from "@/views/auth/view/RegisterView.vue"
 import TheDashboardView from "@/components/TheDashboardView.vue";
 import TransactionView from "@/views/transactions/TransactionView.vue";
 import ViewSingleInvoice from "@/views/invoices/ViewSingleInvoice.vue";
 import InvoiceList from "@/views/invoices/InvoiceList.vue";
 import CustomerList from "@/views/customers/CustomerList.vue";
+import SettingsView from "@/views/settings/TheSettingsView.vue";
+import Profile from "@/views/settings/Profile.vue";
 
 const routes = [
   {
@@ -46,19 +48,27 @@ const routes = [
         },
       },
       {
-        name:'invoice',
-        path: 'invoice',
+        name:'tender',
+        path: 'tender',
         component: InvoiceList,
         meta: {
-          slug: 'Invoices',
+          slug: 'Tenders',
         },
         children: [
           {
-            name:'invoice-view',
+            name:'tender-view',
             path: ':id',
             component: ViewSingleInvoice,
             meta: {
-              slug: 'Detailed Invoice View',
+              slug: 'Detailed Tender View',
+            },
+          },
+          {
+            name:'create-tender',
+            path: 'create',
+            component: ViewSingleInvoice,
+            meta: {
+              slug: 'Detailed Tender View',
             },
           },
         ]
@@ -80,6 +90,14 @@ const routes = [
             },
           },
         ]
+      },
+      {
+        name:'school',
+        path: 'school',
+        component: Profile,
+        meta: {
+          slug: 'School Details',
+        },
       },
     ]
   }

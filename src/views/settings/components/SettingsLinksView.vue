@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import {useStore} from "vuex";
-import routerLinks from "@/components/routerLinks/index.vue";
 import TheMobileMenu from "@/components/TheMobileMenu.vue";
+import SettingsLinks from "@/views/settings/components/SettingsLinks.vue";
 import {useRouter} from "vue-router";
 
 const store = useStore()
@@ -57,13 +57,13 @@ const themeStyle = computed(() => {
 
   <div class="hidden md:flex flex-col gap-4 w-fit h-full border-r" >
 
-<!--
-        v-if="authData?.user?.user_type === 'admin'"
--->
+    <!--
+            v-if="authData?.user?.user_type === 'admin'"
+    -->
     <el-menu
         default-active="1"
         :class="{'light-mode': store.getters.getLightMode, 'dark-mode': !store.getters.getLightMode}"
-        class="el-menu-vertical-demo pr-4"
+        class="el-menu-vertical-demo"
         style="border: none;"
         :active-text-color="store.getters.getLightMode ? 'blue' : '#ffd04b'"
         :active-background-color="store.getters.getLightMode ? 'red' : 'gray'"
@@ -74,7 +74,7 @@ const themeStyle = computed(() => {
         @close="handleClose"
         @select="navigateToSelectedPage"
     >
-      <routerLinks/>
+      <SettingsLinks/>
     </el-menu>
 
   </div>
@@ -86,12 +86,12 @@ const themeStyle = computed(() => {
           default-active="1"
           class="el-menu-vertical-demo "
           style="border: none; width: 100%"
-          :collapse="!store.state.ShowMobileMenu"
+          :collapse="!store.state.ShowSettingsMobileMenu"
           @open="handleOpen"
           @close="handleClose"
           @select="navigateToSelectedPage"
       >
-        <routerLinks/>
+        <SettingsLinks/>
       </el-menu>
 
     </TheMobileMenu>

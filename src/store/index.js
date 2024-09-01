@@ -8,7 +8,8 @@ export default createStore({
     sideBarCollapse : false,
     lightMode : true,
     sideNavCollapse:false,
-    ShowMobileMenu:false
+    ShowMobileMenu:false,
+    ShowSettingsMobileMenu:false,
   },
   actions:{
       /**

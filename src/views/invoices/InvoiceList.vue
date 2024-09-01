@@ -20,13 +20,13 @@ const goTo = (name, id) => {
 <template>
   <router-view/>
 
-  <h2 class="text-xl font-bold my-2">Invoices</h2>
+  <h2 class="text-xl font-bold my-2">Tenders</h2>
 
   <BaseDataTable
       :columns="columns"
       fetch-url="invoice"
-      create-route-name="invoice"
-      title="Invoices"
+      create-route-name="create-tender"
+      title="Tenders"
   >
     <template v-slot:bodyCell="slotProps">
       <template v-if="slotProps.column.prop === 'invoice_number'">
@@ -46,7 +46,7 @@ const goTo = (name, id) => {
       </template>
 
       <template v-if="slotProps.column.key === 'actions'">
-        <ElButton type="primary" link @click="goTo('invoice-view', slotProps.text)" size="default" plain>
+        <ElButton type="primary" link @click="goTo('tender-view', slotProps.text)" size="default" plain>
           View
 
           <span class="w-2"></span>
@@ -58,7 +58,7 @@ const goTo = (name, id) => {
           </el-icon>
         </ElButton>
 
-        <ElButton type="success" link @click="goTo('invoice-view', slotProps.text)" size="default" plain>
+        <ElButton type="success" link @click="goTo('tender-view', slotProps.text)" size="default" plain>
           Download
 
           <span class="w-2"></span>
