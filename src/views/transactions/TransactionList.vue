@@ -228,7 +228,8 @@ const getTransactions = (
     amount: number | null = null,
     payment_method: string = '',
     start_date: string = '',
-    end_date: string = ''
+    end_date: string = '',
+    receiving_account: string = ''
 ) => {
   const queryParams = new URLSearchParams()
 
@@ -238,6 +239,7 @@ const getTransactions = (
   if (payment_method) queryParams.append('payment_method', payment_method)
   if (start_date) queryParams.append('start_date', start_date)
   if (end_date) queryParams.append('end_date', end_date)
+  if (receiving_account) queryParams.append('receiving_account', receiving_account)
 
   store
       .dispatch('fetchList', { url: `transaction?page=${page}&page_size=${size}&${queryParams.toString()}` })
@@ -306,7 +308,7 @@ const getAccounts = ()=>{
         res?.data?.results?.map((item)=>{
           accountList.value.push({
             label: `${item?.name} ${item?.account_identifier}`,
-            value: item?.account_identifier
+            value: item?.id
           })
         })
         accountsLoading.value = false
@@ -332,6 +334,7 @@ const applyFilters = debounce(() => {
     payment_method: selectedMethod.value || '',
     start_date: dateRange.value?.[0] || '',
     end_date: dateRange.value?.[1] || '',
+    receiving_account: selectedAccount.value || '',
   }
 
   getTransactions(
@@ -342,12 +345,13 @@ const applyFilters = debounce(() => {
       filters.amount,
       filters.payment_method,
       filters.start_date,
-      filters.end_date
+      filters.end_date,
+      filters.receiving_account,
   )
 }, 300)
 
 
-watch([search, selectedStatus, amount, selectedMethod, dateRange,confirmationNumber], applyFilters)
+watch([search, selectedStatus, amount, selectedMethod, dateRange,confirmationNumber, selectedAccount], applyFilters)
 
 const tableData = ref([])
 const totalTransactions = ref(0)
