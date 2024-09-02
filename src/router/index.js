@@ -6,6 +6,7 @@ import TransactionView from "@/views/transactions/TransactionView.vue";
 import ViewSingleInvoice from "@/views/invoices/ViewSingleInvoice.vue";
 import InvoiceList from "@/views/invoices/InvoiceList.vue";
 import CustomerList from "@/views/customers/CustomerList.vue";
+import CreateEditCustomer from "@/views/customers/CreateEditCustomer.vue";
 
 const routes = [
   {
@@ -75,6 +76,14 @@ const routes = [
             name:'customer-view',
             path: ':id',
             component: ViewSingleInvoice,
+            meta: {
+              slug: 'Detailed Invoice View',
+            },
+          },
+          {
+            name:'customer-create',
+            path: 'customer-create',
+            component: CreateEditCustomer,
             meta: {
               slug: 'Detailed Invoice View',
             },
