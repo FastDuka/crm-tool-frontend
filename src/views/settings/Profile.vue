@@ -2,6 +2,8 @@
 
 import {ref} from "vue";
 import {Edit, Plus} from "@element-plus/icons-vue";
+import {useStore} from "vuex";
+import {baseUrl} from "@/utility/constants.js"
 
 const accountObj = ref(
  [{
@@ -21,6 +23,7 @@ const orgarnizationObj = ref({
   }
 })
 const organizationLoader = ref(false)
+const logoUrl = ref('https://api.fastduka.co.ke/api')
 
 const accountLoader = ref(false);
 
@@ -30,8 +33,24 @@ const paymentDetailsObj = ref([
   }
 ]);
 const paymentDetailsLoader = ref(false);
+const store = useStore();
 
+const getOrganisationDetails = ()=>{
+  store.dispatch("fetchList", {url:'get-my-organization'})
+      .then((res)=>{
+        orgarnizationObj.value = res.data;
+      })
+}
 
+const getAccountDetails = ()=>{
+  store.dispatch("fetchList", {url:'account'})
+      .then((res)=>{
+        accountObj.value = res.data?.results;
+      })
+}
+
+getAccountDetails()
+getOrganisationDetails()
 </script>
 
 <template>
@@ -52,7 +71,7 @@ const paymentDetailsLoader = ref(false);
 
       <div v-if="!organizationLoader" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center w-full">
         <div class="theme-flex-col w-full">
-          <el-avatar :size="60" src="https://empty">
+          <el-avatar :size="60" :src="logoUrl + orgarnizationObj?.logo">
             <img alt="err"
                 src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
             />

@@ -8,6 +8,8 @@ import InvoiceList from "@/views/invoices/InvoiceList.vue";
 import CustomerList from "@/views/customers/CustomerList.vue";
 import SettingsView from "@/views/settings/TheSettingsView.vue";
 import Profile from "@/views/settings/Profile.vue";
+import CreateEditOrganization from "@/views/settings/components/CreateEditOrganization.vue";
+import CreateEditAccount from "@/views/settings/components/CreateEditAccount.vue";
 
 const routes = [
   {
@@ -98,6 +100,24 @@ const routes = [
         meta: {
           slug: 'School Details',
         },
+        children: [
+          {
+            name: 'create-organization',
+            path: 'create-organization',
+            component: CreateEditOrganization,
+            meta: {
+              slug: 'Register Organization',
+            },
+          },
+          {
+            name: 'create-account',
+            path: 'create-account',
+            component: CreateEditAccount,
+            meta: {
+              slug: 'Register Account',
+            },
+          },
+        ]
       },
     ]
   }
