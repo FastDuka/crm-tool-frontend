@@ -7,6 +7,7 @@ import ViewSingleInvoice from "@/views/invoices/ViewSingleInvoice.vue";
 import InvoiceList from "@/views/invoices/InvoiceList.vue";
 import CustomerList from "@/views/customers/CustomerList.vue";
 import CreateEditCustomer from "@/views/customers/CreateEditCustomer.vue";
+import CreateInvoice from "@/views/invoices/CreateInvoice.vue";
 
 const routes = [
   {
@@ -62,6 +63,14 @@ const routes = [
               slug: 'Detailed Invoice View',
             },
           },
+          {
+            name:'invoice-create',
+            path: 'invoice-create',
+            component: CreateInvoice,
+            meta: {
+              slug: 'Create Invoice',
+            },
+          },
         ]
       },
       {
@@ -77,7 +86,7 @@ const routes = [
             path: ':id',
             component: ViewSingleInvoice,
             meta: {
-              slug: 'Detailed Invoice View',
+              slug: 'Detailed Customer View',
             },
           },
           {
@@ -85,7 +94,7 @@ const routes = [
             path: 'customer-create',
             component: CreateEditCustomer,
             meta: {
-              slug: 'Detailed Invoice View',
+              slug: 'Register Customer',
             },
           },
         ]
