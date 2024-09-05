@@ -40,7 +40,7 @@ const removeRow = (index) => {
 const calculateTotals = () => {
   tableData.value.forEach((item) => {
     item.net_total = item.quantity * item.unit_price;
-    item.total_tax = item.unit_price * item.taxable_percentage;
+    item.total_tax = item.unit_price * (item.taxable_percentage / 100);
     item.total = item.unit_price + item.total_tax;
   });
 };

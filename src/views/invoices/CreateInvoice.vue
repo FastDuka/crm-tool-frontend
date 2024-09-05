@@ -1,20 +1,29 @@
-<script setup>
+<script setup lang="ts">
 import store from "@/store/index.js";
-import { useRoute } from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import { onMounted, ref, watch } from "vue";
 import { formatDate } from "@/utility/functions.js";
-import {Plus, User} from "@element-plus/icons-vue";
+import {Delete, Plus, User} from "@element-plus/icons-vue";
 import BaseDialog from "@/components/base/BaseDialog.vue";
+import {ElNotification, FormInstance, FormRules} from "element-plus";
+
 
 const route = useRoute();
-const tableData = ref([]);
+const router = useRouter();
+const productsArray = ref([
+]);
 const organisationDetails = ref({});
 const customerDetails = ref({});
-const invoiceDetails = ref({});
+const totalBill = ref(0)
+
+const invoiceDetails = ref({
+  products: productsArray.value,
+});
+
 
 const getInvoices = () => {
   store.dispatch("fetchSingleItem", { url: "invoice", id: route.params.id }).then((res) => {
-    tableData.value = res?.data.products || [];
+    productsArray.value = res?.data.products || [];
     organisationDetails.value = res?.data?.beneficiary;
     customerDetails.value = res?.data?.customer;
     invoiceDetails.value = res?.data;
@@ -22,11 +31,11 @@ const getInvoices = () => {
 };
 
 const addRow = () => {
-  tableData.value.push({
-    name: "",
-    quantity: 0,
-    unit_price: 0,
-    taxable_percentage: 0.16,
+  productsArray.value.push({
+    name: "Test Product",
+    quantity: 1,
+    unit_price: 100,
+    taxable_percentage: 16,
     net_total: 0,
     total_tax: 0,
     total: 0,
@@ -34,15 +43,18 @@ const addRow = () => {
 };
 
 const removeRow = (index) => {
-  tableData.value.splice(index, 1);
+  productsArray.value.splice(index, 1);
 };
 
 const calculateTotals = () => {
-  tableData.value.forEach((item) => {
+  totalBill.value = 0
+  productsArray.value.forEach((item) => {
     item.net_total = item.quantity * item.unit_price;
-    item.total_tax = item.unit_price * item.taxable_percentage;
-    item.total = item.unit_price + item.total_tax;
+    item.total_tax = item.net_total * (item.taxable_percentage / 100);
+    item.total = item.net_total + item.total_tax;
+    totalBill.value = totalBill.value + item.total
   });
+  invoiceDetails.value.total_billed = totalBill.value
 };
 
 const customers = ref([]);
@@ -60,11 +72,11 @@ const getCustomers = () => {
 };
 
 // Watch for changes in tableData and update totals
-watch(tableData, calculateTotals, { deep: true });
+watch(productsArray, calculateTotals, { deep: true });
 
 // Watch for changes in tableData and trigger a PATCH request
 watch(
-    tableData,
+    productsArray,
     (newData) => {
       const updatedInvoice = {
         products: newData,
@@ -72,7 +84,7 @@ watch(
         total_tax: newData.reduce((total, item) => total + item.total_tax, 0),
       };
 
-      store.dispatch('patchData', {'url': 'invoice', id: route.params.id, data: updatedInvoice});
+      // store.dispatch('patchData', {'url': 'invoice', id: route.params.id, data: updatedInvoice});
 
       // axios
       //     .patch(`${process.env.VUE_APP_API_URL}/invoice/${route.params.id}/`, route.params.id)
@@ -86,6 +98,42 @@ watch(
     { deep: true }
 );
 
+const invoiceLoading = ref(false)
+const ruleFormRef = ref<FormInstance>();
+
+const submitForm = async (formEl: FormInstance | undefined) => {
+  invoiceLoading.value = true;
+  if (!formEl) return;
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      store
+          .dispatch("postData", {
+            url: "invoice",
+            data: invoiceDetails.value
+          })
+          .then((resp) => {
+            invoiceLoading.value = false;
+            useRouter().go(-1)
+
+          })
+          .catch((err)=>{
+            invoiceLoading.value = false;
+          });
+
+    } else {
+      invoiceLoading.value = false;
+      ElNotification({
+        title: 'Error',
+        type: "error",
+        position: "top-right",
+        message: "Fill required fields"
+      })
+    }
+    invoiceLoading.value = false;
+  });
+};
+
+
 onMounted(() => {
   // getInvoices();
 });
@@ -97,13 +145,16 @@ onMounted(() => {
   <BaseDialog>
     <template #content>
         <!--    invoice details -->
+      <el-form
+          ref="ruleFormRef"
+          :model="invoiceDetails"
+          class="w-full flex flex-col gap-4"
+          label-position="top">
         <div class="rounded-lg bg-gray-100 text-black flex flex-wrap gap-4 justify-between p-4 w-full">
           <!--  logo and email    -->
-          <el-form
-            ref="ruleFormRef"
-            :model="invoiceDetails"
+          <div
             class="w-full flex flex-col gap-4"
-            label-position="top">
+            >
             <div>
               <el-form-item
                   class="w-full md:w-[300px]"
@@ -111,7 +162,7 @@ onMounted(() => {
                   prop="invoice_number"
                             :rules="[
                     {
-                      required: true,
+                      required: false,
                       message: 'Please input invoice number',
                       trigger: 'blur',
                     },
@@ -164,12 +215,12 @@ onMounted(() => {
                     <el-option v-for="item in customers" :key="item.value" :label="item.label" :value="item.value" />
                   </el-select>
                 </el-form-item>
-                <el-button size="large" circle type="primary" @click="addRow">
+                <el-button size="large" circle type="primary" @click="router.push({name: 'customer-create'})">
                   <Plus class="h-6 w-6"/>
                 </el-button>
               </div>
           </div>
-        </el-form>
+        </div>
 
         <!--    table-->
         <div class="flex flex-col gap-4 w-full">
@@ -178,45 +229,60 @@ onMounted(() => {
           </h2>
 
           <div class="flex flex-col items-center gap-4 w-full">
-            <el-table :data="tableData" style="width: 100%">
+
+            <el-table :data="productsArray" style="width: 100%">
               <el-table-column prop="name" label="Name" width="180">
-                <template #default="{ row }">
-                  <el-input v-model="row.name" placeholder="Enter name"  />
+                <template #default="{ row, $index }">
+                  <span class="flex gap-4">
+                     <el-button icon="Delete" circle type="danger"  @click="removeRow($index)"/>
+
+                    <el-form-item>
+                      <el-input v-model="row.name" placeholder="Enter name"  />
+                    </el-form-item>
+                  </span>
+
                 </template>
               </el-table-column>
               <el-table-column prop="quantity" label="Quantity" width="180">
                 <template #default="{ row }">
-                  <el-input-number v-model="row.quantity" :min="0"  />
+                  <el-form-item>
+                    <el-input-number v-model="row.quantity" :min="0"  />
+                  </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="unit_price" label="Unit Price" width="180">
                 <template #default="{ row }">
-                  <el-input-number v-model="row.unit_price" :min="0" />
+                  <el-form-item>
+                    <el-input-number v-model="row.unit_price" :min="0" />
+                  </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="taxable_percentage" label="Taxable Percentage" width="180">
                 <template #default="{ row }">
-                  <el-input-number v-model="row.taxable_percentage" :min="0" :max="100"  />
+                  <el-form-item>
+                    <el-input-number v-model="row.taxable_percentage" :min="0" :max="100"  />
+                  </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="net_total" label="Net Total" width="180">
                 <template #default="{ row }">
-                  <el-input-number v-model="row.net_total" :min="0"  />
+                  <el-form-item>
+                    <el-input-number v-model="row.net_total" :min="0"  />
+                  </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="total_tax" label="Total Tax" width="180">
                 <template #default="{ row }">
-                  <el-input-number v-model="row.total_tax" :min="0"  />
+                  <el-form-item>
+                    <el-input-number v-model="row.total_tax" :min="0"  />
+                  </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column prop="total" label="Total" min-width="160">
                 <template #default="{ row }">
-                  <el-input-number v-model="row.total" :min="0" />
-                </template>
-              </el-table-column>
-              <el-table-column fixed="right" label="Operations" min-width="100">
-                <template #default="{ $index }">
-                  <el-button link type="primary" size="small" @click="removeRow($index)">Delete</el-button>
+                  <el-form-item>
+                    <el-input-number v-model="row.total" :min="0" />
+                  </el-form-item>
                 </template>
               </el-table-column>
             </el-table>
@@ -234,30 +300,17 @@ onMounted(() => {
           <div class="flex font-bold w-full justify-end p-2">
             <div class="flex w-fit gap-4 items-center">
               <h3>Total Billed</h3>
-              <h3>KES {{invoiceDetails?.total_billed}}</h3>
+              <h3>KES {{totalBill}}</h3>
             </div>
           </div>
           <div class="flex w-full justify-end p-2">
-            <div class="flex w-fit gap-4 items-center">
-              <h3>Tax</h3>
-              <h3>{{invoiceDetails?.total_tax}}</h3>
-            </div>
-          </div>
-          <div class="flex w-full justify-end p-2">
-            <div class="flex w-fit gap-4 items-center border-t text-lg font-bold text-black pt-2">
-              <h3>Total Paid</h3>
-              <h3>KES
-                {{ invoiceDetails?.payment_information && Array.isArray(invoiceDetails.payment_information)
-                    ? invoiceDetails.payment_information.reduce((total, item) => total + Number(item.amount || 0), 0)
-                    : 0
-                }}
-              </h3>
-            </div>
+            <el-button size="large" :loading="invoiceLoading" type="primary" @click="submitForm(ruleFormRef)">Submit</el-button>
           </div>
         </div>
 
 
       </div>
+      </el-form>
     </template>
   </BaseDialog>
 
