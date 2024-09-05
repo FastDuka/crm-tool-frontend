@@ -168,7 +168,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           <el-form-item label="Account Number" prop="account_number"
                         :rules="[
             {
-              required: true,
+              required: false,
               message: 'Please input account_number',
               trigger: 'blur',
             },
