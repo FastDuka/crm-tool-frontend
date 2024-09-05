@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {ElNotification, FormInstance, FormRules} from "element-plus";
 import config from "@/utility/configs.json"
 import {Lock, User} from "@element-plus/icons-vue";
 import store from "@/store/index"
 import router from "@/router/index"
 import BaseDialog from "@/components/base/BaseDialog.vue";
+import {useRoute} from "vue-router";
 const loading = ref(false);
 const form = reactive({
 });
@@ -45,30 +46,43 @@ const rules = reactive<FormRules>({
   }
 });
 
+const route = useRoute();
+
 const submitForm = async (formEl: FormInstance | undefined) => {
   loginLoading.value = true;
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      store
-          .dispatch("postData", {
-            url: "customer",
-            data: form
-          })
-          .then((resp) => {
-            loginLoading.value = false;
+      if (route?.name != "customer-edit"){
+        store
+            .dispatch("postData", {
+              url: "customer",
+              data: form
+            })
+            .then((resp) => {
+              loginLoading.value = false;
 
-            /**
-             * Redirect based on user type
-             *
-             */
-            router.push({name: 'transaction'});
+            })
+            .catch((err)=>{
+              loginLoading.value = false;
+            });
+      }else {
+        delete form.updated_at;
+        store
+            .dispatch("patchData", {
+              id:route?.params?.id,
+              url: "customer",
+              data: form
+            })
+            .then((resp) => {
+              loginLoading.value = false;
 
-          })
-          .catch((err)=>{
-            loginLoading.value = false;
-          })
-      ;
+            })
+            .catch((err)=>{
+              loginLoading.value = false;
+            });
+      }
+
     } else {
       loginLoading.value = false;
       ElNotification({
@@ -81,6 +95,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     loading.value = false;
   });
 };
+
+const fetchOnMount = ()=>{
+  if (route?.name == "customer-edit"){
+    store.dispatch('fetchSingleItem', {url:'customer', id:route?.params?.id})
+        .then((response)=>{
+          console.log('response',response);
+          Object.assign(form, response?.data);
+        })
+  }
+}
+
+onMounted(()=>{
+  fetchOnMount()
+})
 
 </script>
 

@@ -82,11 +82,11 @@ const routes = [
         },
         children: [
           {
-            name:'customer-view',
+            name:'customer-edit',
             path: ':id',
-            component: ViewSingleInvoice,
+            component: CreateEditCustomer,
             meta: {
-              slug: 'Detailed Customer View',
+              slug: 'Update Customer',
             },
           },
           {
