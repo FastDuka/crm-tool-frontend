@@ -17,7 +17,7 @@
         <el-dialog v-model="visible"
                    :show-close="true"
                     :before-close="handleClose"
-                    width="1000" style="border-radius: 5px; max-width: 90%; min-width: 50%">
+                    style="border-radius: 5px; max-width: 90%; min-width: 50%">
           <div
               class="flex flex-col gap-4"
           >
@@ -67,7 +67,7 @@
       </div>
 
       <div
-          class="max-w-full pb-4 overflow-x-auto md:hidden"
+          class="max-w-full pb-8 overflow-x-auto overflow-y-hidden md:hidden h-fit"
       >
         <el-pagination
             @size-change="handleSizeChange"
@@ -79,7 +79,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4 pr-2 overflow-y-scroll">
+      <div class="flex flex-grow flex-1 flex-col gap-2 pr-2 overflow-y-scroll">
         <TransactionCard
             v-for="transaction in tableData"
             :key="transaction.id"

@@ -11,7 +11,7 @@
 </script>
 
 <template>
-  <div class="w-full flex flex-col gap-4 p-4 rounded-md bg-white hover:bg-gray-200 cursor-pointer">
+  <div class="w-full flex flex-col gap-2 p-4 rounded-md bg-white hover:bg-gray-200 cursor-pointer">
     <div class="flex items-center justify-between gap-4">
       <div class="flex items-center gap-4">
         <div v-if="transactionObj?.transaction_confirmation_number"
