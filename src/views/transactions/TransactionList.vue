@@ -73,6 +73,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
+            :page-sizes="[5, 10, 20, 30, 50]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalTransactions"
@@ -448,7 +449,7 @@ watch([search, selectedStatus, amount, selectedMethod, dateRange,confirmationNum
 const tableData = ref([])
 const totalTransactions = ref(0)
 const currentPage = ref(1)
-const pageSize = ref(10)
+const pageSize = ref(5)
 
 const handleSizeChange = (size) => {
   pageSize.value = size;
