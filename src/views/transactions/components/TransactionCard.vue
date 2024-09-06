@@ -41,14 +41,13 @@
 
         <div class="flex items-center gap-4">
           <div>
-            Act :
+            {{transactionObj?.receiving_account?.account_type_name}} :
           </div>
           <div class="font-bold">{{transactionObj?.receiving_account?.account_identifier}}</div>
         </div>
       </div>
 
 
-      <div>{{transactionObj?.receiving_account?.account_type_name}}</div>
 
     </div>
 
