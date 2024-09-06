@@ -1,5 +1,5 @@
 <template>
-  <div class="theme-flex-col h-full py-4">
+  <div class="flex flex-col gap-4 h-full py-4">
 
     <h2 class="secondary-header">
       Transactions
