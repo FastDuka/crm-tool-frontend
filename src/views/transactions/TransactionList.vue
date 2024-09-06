@@ -4,8 +4,89 @@
       Transactions
     </h2>
 
+    <div class="md:hidden flex flex-col gap-4 w-full pr-2 h-full">
+
+      <div class="">
+        <el-button link class="my-2" @click="visible = true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+          </svg>
+        </el-button>
+
+        <el-dialog v-model="visible"
+                   :show-close="true"
+                    :before-close="handleClose"
+                    width="1000" style="border-radius: 5px; max-width: 90%; min-width: 50%">
+          <div
+              class="flex flex-col gap-4"
+          >
+
+            <h3 class="font-bold">Filters</h3>
+
+            <el-input
+                v-model="confirmationNumber"
+                class="w-full"
+                clearable
+                placeholder="confirmation number"
+            />
+
+            <el-select v-model="selectedStatus" clearable placeholder="Transaction Status">
+              <el-option v-for="item in payment_status" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+
+            <el-input v-model="amount" class="w-full" clearable placeholder="Amount" />
+
+            <el-select clearable
+                       v-model="selectedAccount"
+                       :loading="accountsLoading"
+                       @focus="getAccounts" placeholder="Receiving Account">
+              <el-option
+                  v-for="method in accountList"
+                  :key="method.value"
+                  :label="method.label"
+                  :value="method.value"
+              />
+            </el-select>
+
+            <el-date-picker
+                clearable
+                v-model="dateRange"
+                type="daterange"
+                range-separator="To"
+                start-placeholder="Start date"
+                end-placeholder="End date"
+                placeholder="Select date"
+                style="width: 100%"
+                format="YYYY-MM-DD"
+                date-format="YYYY/MM/DD ddd"
+            />
+          </div>
+
+        </el-dialog>
+      </div>
+
+      <div
+          class="max-w-full pb-4 overflow-x-auto md:hidden"
+      >
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalTransactions"
+        />
+      </div>
+
+      <TransactionCard
+          v-for="transaction in tableData"
+          :key="transaction.id"
+          :transaction-obj="transaction"/>
+    </div>
+
     <el-table
         :data="tableData"
+        class="hidden md:block"
         style="width: 100%; border-radius: 5px;"
         :pagination="false"
     >
@@ -169,7 +250,7 @@
 
     <!-- Pagination -->
     <div
-        class="max-w-full pb-4 overflow-x-auto"
+        class="max-w-full pb-4 overflow-x-auto hidden md:block"
     >
       <el-pagination
           @size-change="handleSizeChange"
@@ -189,6 +270,9 @@ import { watch, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { format, parseISO } from 'date-fns'
 import { debounce } from 'lodash';
+import TransactionsMobileView from "@/views/transactions/components/TransactionsMobileView.vue";
+import TransactionCard from "@/views/transactions/components/TransactionCard.vue";
+import {ElDialog} from "element-plus";
 
 // Debounce getTransactions to avoid making too many requests
 const debouncedGetTransactions = debounce((page, size, query) => {
@@ -325,6 +409,10 @@ const selectedMethod = ref('')
 const selectedAccount = ref('')
 const dateRange = ref(null)
 const confirmationNumber = ref(null)
+const visible = ref(false)
+const handleClose = ()=>{
+  visible.value = false
+}
 
 const applyFilters = debounce(() => {
   const filters = {

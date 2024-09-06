@@ -152,7 +152,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
               </el-breadcrumb-item>
             </el-breadcrumb>
 
-            <div class="p-2 flex-grow flex-1 h-full w-full overflow-y-scroll">
+            <div class="pt-2 md:p-2 flex-grow flex-1 h-full w-full overflow-y-scroll">
               <router-view :style="routerViewStyle"/>
             </div>
 
