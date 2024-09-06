@@ -311,7 +311,7 @@ const store = useStore()
 // }
 const getTransactions = (
     page: number = 1,
-    size: number = 10,
+    size: number = 5,
     transaction_confirmation_number: string = '',
     transaction_status: string = '',
     amount: number | null = null,
