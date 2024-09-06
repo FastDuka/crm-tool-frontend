@@ -142,7 +142,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
             <TheSideNav/>
           </div>
 
-          <div class=" w-full  p-4 md:p-0 primary-bg overflow-x-hidden overflow-y-auto h-full ">
+          <div class=" w-full  p-4 md:p-0 primary-bg overflow-x-hidden h-full ">
             <el-breadcrumb separator="/"
                            :style="breadcrumbStyle"
                            class="md:hidden" >
@@ -152,7 +152,7 @@ watch(route, updateBreadcrumbs, { immediate: true });
               </el-breadcrumb-item>
             </el-breadcrumb>
 
-            <div class="pt-2 md:p-2 flex-grow flex-1 h-full w-full overflow-y-scroll">
+            <div class="pt-2 md:p-2 flex-grow flex-1 h-full w-full">
               <router-view :style="routerViewStyle"/>
             </div>
 

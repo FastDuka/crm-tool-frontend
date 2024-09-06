@@ -1,5 +1,6 @@
 <template>
-  <div class="theme-flex-col h-full">
+  <div class="theme-flex-col h-full py-4">
+
     <h2 class="secondary-header">
       Transactions
     </h2>
