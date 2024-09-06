@@ -1,10 +1,10 @@
 <template>
-  <div class="theme-flex-col">
+  <div class="theme-flex-col h-full">
     <h2 class="secondary-header">
       Transactions
     </h2>
 
-    <div class="md:hidden flex flex-col gap-4 w-full pr-2 h-full">
+    <div class="md:hidden flex flex-col gap-4 w-full pr-2 h-full pb-4">
 
       <div class="">
         <el-button link class="my-2" @click="visible = true">
@@ -78,10 +78,13 @@
         />
       </div>
 
-      <TransactionCard
-          v-for="transaction in tableData"
-          :key="transaction.id"
-          :transaction-obj="transaction"/>
+      <div class="flex flex-col gap-4 pr-2 overflow-y-scroll">
+        <TransactionCard
+            v-for="transaction in tableData"
+            :key="transaction.id"
+            :transaction-obj="transaction"/>
+      </div>
+
     </div>
 
     <el-table
