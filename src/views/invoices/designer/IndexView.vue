@@ -91,15 +91,15 @@ const designerHidden = ref(false)
 const previewHidden = ref(false)
 const invoiceData = ref({
   company: {
-    name: "O Creations",
-    email: "o@co.com",
+    name: "",
+    email: "",
     address: "",
     phone: "",
     logo: null,
   },
   customer: {
-    name: "Sam",
-    email: "sam@co.com",
+    name: "",
+    email: "",
     address: "",
     phone: "",
   },

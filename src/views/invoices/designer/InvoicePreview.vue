@@ -109,7 +109,7 @@
         <p class="mt-4">Payment Terms: {{ invoiceData.paymentTerms }}</p>
       </div>
       <div class="flex w-full cursor-pointer">
-        <p class="bottom-4 left-8 text-center absolute capitalize">Invoice Was created at <a class="text-blue-400"
+        <p class="bottom-4 text-center absolute capitalize">Invoice Was created at <a class="text-blue-400"
              href="https://fastduka.netlify.app/designer">FastDuka
             Invoicing</a>
         </p>
@@ -125,6 +125,7 @@ import ProductList from "@/views/invoices/designer/components/preview/ProductLis
 import axios from "axios";
 import { ElNotification } from "element-plus";
 import { computed, ref } from "vue";
+import { baseUrl } from "../../../utility/constants";
 import AddressPreview from "./components/preview/CompanyAddressPreview.vue";
 
 const props = defineProps({
@@ -237,7 +238,7 @@ const generatePdf = async () => {
       `;
 
     // Send to backend
-    const response = await axios.post('http://localhost:8000/api/invoice/v2/html-to-pdf/', {
+    const response = await axios.post(baseUrl + 'invoice/v2/html-to-pdf/', {
       html_content: invoiceHTML,
       css_content: tailwindCSS + printCSS,
       invoice_number: props.invoiceData.invoiceNumber,
