@@ -14,7 +14,7 @@
         </button>
         <button class="btn-outline">
           <i class="fas fa-envelope mr-2"></i>
-          Send Email
+          Send Email (coming soon)
         </button>
       </div>
     </div>
