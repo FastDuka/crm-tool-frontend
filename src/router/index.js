@@ -1,108 +1,116 @@
-import { createRouter, createWebHistory } from "vue-router";
-import LoginView from "@/views/auth/LoginView.vue"
-import RegisterView from "@/views/auth/view/RegisterView.vue"
 import TheDashboardView from "@/components/TheDashboardView.vue";
-import TransactionView from "@/views/transactions/TransactionView.vue";
-import ViewSingleInvoice from "@/views/invoices/ViewSingleInvoice.vue";
-import InvoiceList from "@/views/invoices/InvoiceList.vue";
-import CustomerList from "@/views/customers/CustomerList.vue";
+import LoginView from "@/views/auth/LoginView.vue";
+import RegisterView from "@/views/auth/view/RegisterView.vue";
 import CreateEditCustomer from "@/views/customers/CreateEditCustomer.vue";
+import CustomerList from "@/views/customers/CustomerList.vue";
 import CreateInvoice from "@/views/invoices/CreateInvoice.vue";
-
+import IndexView from "@/views/invoices/designer/IndexView.vue";
+import InvoiceList from "@/views/invoices/InvoiceList.vue";
+import ViewSingleInvoice from "@/views/invoices/ViewSingleInvoice.vue";
+import TransactionView from "@/views/transactions/TransactionView.vue";
+import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
-    name:'register',
-    path: '/register',
+    name: "register",
+    path: "/register",
     component: RegisterView,
     requiresAuth: true,
     roles: [],
     meta: {
-      slug: 'User Registration',
+      slug: "User Registration",
       requiresAuth: false,
     },
   },
   {
-    name:'login',
-    path: '/',
+    name: "login",
+    path: "/",
     component: LoginView,
     meta: {
-      slug: 'Login',
+      slug: "Login",
       requiresAuth: false,
     },
   },
   {
-    name:'dashboard',
-    path: '/dashboard',
+    name: "designer",
+    path: "/designer",
+    component: IndexView,
+    meta: {
+      slug: "Maker",
+      requiresAuth: false,
+    },
+  },
+  {
+    name: "dashboard",
+    path: "/dashboard",
     component: TheDashboardView,
     meta: {
       requiresAuth: true,
-      slug: 'Dashboard',
+      slug: "Dashboard",
     },
-    children : [
+    children: [
       {
-        name:'transaction',
-        path: 'transaction',
+        name: "transaction",
+        path: "transaction",
         component: TransactionView,
         meta: {
-          slug: 'Transactions',
+          slug: "Transactions",
         },
       },
       {
-        name:'invoice',
-        path: 'invoice',
+        name: "invoice",
+        path: "invoice",
         component: InvoiceList,
         meta: {
-          slug: 'Invoices',
+          slug: "Invoices",
         },
         children: [
           {
-            name:'invoice-view',
-            path: ':id',
+            name: "invoice-view",
+            path: ":id",
             component: ViewSingleInvoice,
             meta: {
-              slug: 'Detailed Invoice View',
+              slug: "Detailed Invoice View",
             },
           },
           {
-            name:'invoice-create',
-            path: 'invoice-create',
+            name: "invoice-create",
+            path: "invoice-create",
             component: CreateInvoice,
             meta: {
-              slug: 'Create Invoice',
+              slug: "Create Invoice",
             },
           },
-        ]
+        ],
       },
       {
-        name:'customer',
-        path: 'customer',
+        name: "customer",
+        path: "customer",
         component: CustomerList,
         meta: {
-          slug: 'Customers',
+          slug: "Customers",
         },
         children: [
           {
-            name:'customer-edit',
-            path: ':id',
+            name: "customer-edit",
+            path: ":id",
             component: CreateEditCustomer,
             meta: {
-              slug: 'Update Customer',
+              slug: "Update Customer",
             },
           },
           {
-            name:'customer-create',
-            path: 'customer-create',
+            name: "customer-create",
+            path: "customer-create",
             component: CreateEditCustomer,
             meta: {
-              slug: 'Register Customer',
+              slug: "Register Customer",
             },
           },
-        ]
+        ],
       },
-    ]
-  }
-
-]
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),

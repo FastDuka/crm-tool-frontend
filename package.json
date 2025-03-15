@@ -13,9 +13,11 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@vue-hero-icons/outline": "^1.7.2",
     "@vue-hero-icons/solid": "^1.7.2",
-    "axios": "^1.7.5",
+    "axios": "^1.7.9",
     "date-fns": "^3.6.0",
     "element-plus": "^2.8.1",
+    "lucide-vue-next": "^0.475.0",
+    "posthog-js": "^1.231.0",
     "vue": "^3.4.37",
     "vue-router": "^4.4.3",
     "vuex": "^4.1.0"
