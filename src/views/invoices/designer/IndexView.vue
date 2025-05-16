@@ -90,6 +90,7 @@ console.log("today", today)
 const designerHidden = ref(false)
 const previewHidden = ref(false)
 const invoiceData = ref({
+  type:'invoice',//invoice, quotation
   company: {
     name: "",
     email: "",

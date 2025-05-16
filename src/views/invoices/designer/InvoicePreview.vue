@@ -3,14 +3,18 @@
 <template>
   <div class="">
     <!-- Header Actions -->
-    <div class="flex md:flex-row flex-col items-start md:items-center justify-between mb-6">
+    <div
+      class="flex md:flex-row flex-col items-start md:items-center justify-between mb-6"
+    >
       <h2 class="text-2xl font-bold">Preview</h2>
       <div class="flex space-x-4">
-        <button class="btn-outline"
-                @click="generatePdf"
-                :disabled="isGeneratingPdf">
+        <button
+          class="btn-outline"
+          @click="generatePdf"
+          :disabled="isGeneratingPdf"
+        >
           <i class="fas fa-file-pdf mr-2"></i>
-          {{ isGeneratingPdf ? 'Generating...' : 'Download PDF' }}
+          {{ isGeneratingPdf ? "Generating..." : "Download PDF" }}
         </button>
         <button class="btn-outline">
           <i class="fas fa-envelope mr-2"></i>
@@ -20,27 +24,36 @@
     </div>
 
     <!-- PDF Generation Status Message -->
-    <div v-if="pdfMessage"
-         class="mb-4 p-3 rounded-md"
-         :class="pdfMessageType === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'">
+    <div
+      v-if="pdfMessage"
+      class="mb-4 p-3 rounded-md"
+      :class="
+        pdfMessageType === 'error'
+          ? 'bg-red-100 text-red-700'
+          : 'bg-green-100 text-green-700'
+      "
+    >
       {{ pdfMessage }}
     </div>
 
     <!-- Invoice Preview Card -->
-    <div class="p-2 min-h-[800px]"
-         ref="invoicePreview">
+    <div class="p-2 min-h-[800px]" ref="invoicePreview">
       <!-- Company and Invoice Details Header -->
       <div class="flex justify-between items-start mb-8">
         <div class="flex flex-col justify-start">
-          <CompanyLogoPreview :logo="invoiceData.company.logo"
-                              :company-name="invoiceData.company.name"
-                              size="large"
-                              class="mb-4" />
+          <CompanyLogoPreview
+            :logo="invoiceData.company.logo"
+            :company-name="invoiceData.company.name"
+            size="large"
+            class="mb-4"
+          />
 
           <AddressPreview :invoice-data="invoiceData"></AddressPreview>
         </div>
         <div class="text-right">
-          <h1 class="text-2xl font-bold mb-2">INVOICE</h1>
+          <h1 class="text-2xl font-bold mb-2 uppercase">
+            {{ invoiceData?.type }}
+          </h1>
           <div class="text-gray-600">
             <p class="mb-1"># {{ invoiceData.invoiceNumber }}</p>
             <p class="mb-1">Issue Date: {{ formatDate(invoiceData.date) }}</p>
@@ -69,8 +82,10 @@
       </div>
 
       <!-- Items Table -->
-      <ProductList :items="invoiceData.items"
-                   :currency="invoiceData.currency" />
+      <ProductList
+        :items="invoiceData.items"
+        :currency="invoiceData.currency"
+      />
 
       <!-- Totals Section -->
       <div class="w-80 ml-auto">
@@ -80,8 +95,7 @@
             <span>{{ formatCurrency(calculateSubtotal) }}</span>
           </div>
 
-          <div v-if="invoiceData.discount.enabled"
-               class="flex justify-between">
+          <div v-if="invoiceData.discount.enabled" class="flex justify-between">
             <span class="text-gray-500">
               Discount ({{ invoiceData.discount.value }}%)
             </span>
@@ -109,12 +123,15 @@
         <p class="mt-4">Payment Terms: {{ invoiceData.paymentTerms }}</p>
       </div>
       <div class="flex w-full cursor-pointer">
-        <p class="bottom-4 text-center absolute capitalize">Invoice Was created at <a class="text-blue-400"
-             href="https://fastduka.netlify.app/designer">FastDuka
-            Invoicing</a>
+        <p class="bottom-4 text-center absolute capitalize">
+          Invoice Was created at
+          <a
+            class="text-blue-400"
+            href="https://invoices.fastduka.co.ke/designer"
+            >FastDuka Invoicing</a
+          >
         </p>
       </div>
-
     </div>
   </div>
 </template>
@@ -137,8 +154,8 @@ const props = defineProps({
 
 // Refs for PDF generation
 const isGeneratingPdf = ref(false);
-const pdfMessage = ref('');
-const pdfMessageType = ref('info');
+const pdfMessage = ref("");
+const pdfMessageType = ref("info");
 const invoicePreview = ref(null);
 
 const calculateSubtotal = computed(() => {
@@ -182,36 +199,41 @@ const formatCurrency = (number) => {
  */
 const generatePdf = async () => {
   isGeneratingPdf.value = true;
-  pdfMessage.value = '';
+  pdfMessage.value = "";
 
   try {
     const invoiceHTML = invoicePreview.value.outerHTML;
 
     // Get the Tailwind CSS stylesheet
-    const tailwindStylesheet = Array.from(document.styleSheets)
-      .find(sheet => {
+    const tailwindStylesheet = Array.from(document.styleSheets).find(
+      (sheet) => {
         // Look for the main stylesheet that contains Tailwind classes
         // This might need adjustment based on your build setup
         try {
-          return sheet.cssRules &&
-            Array.from(sheet.cssRules).some(rule =>
-              rule.cssText && rule.cssText.includes('.bg-blue-500') ||
-              rule.cssText.includes('.text-gray-600'));
+          return (
+            sheet.cssRules &&
+            Array.from(sheet.cssRules).some(
+              (rule) =>
+                (rule.cssText && rule.cssText.includes(".bg-blue-500")) ||
+                rule.cssText.includes(".text-gray-600")
+            )
+          );
         } catch (e) {
           return false;
         }
-      });
+      }
+    );
 
-    let tailwindCSS = '';
+    let tailwindCSS = "";
 
     if (tailwindStylesheet) {
       try {
         // Extract all CSS rules from the Tailwind stylesheet
-        Array.from(tailwindStylesheet.cssRules).forEach(rule => {
-          tailwindCSS += rule.cssText + '\n';
+        Array.from(tailwindStylesheet.cssRules).forEach((rule) => {
+          tailwindCSS += rule.cssText + "\n";
         });
       } catch (e) {
-        console.warn('Could not extract Tailwind CSS rules:', e);
+        console.warn("Could not extract Tailwind CSS rules:", e);
       }
     }
 
@@ -238,24 +260,29 @@ const generatePdf = async () => {
       `;
 
     // Send to backend
-    const response = await axios.post(baseUrl + 'invoice/v2/html-to-pdf/', {
-      html_content: invoiceHTML,
-      css_content: tailwindCSS + printCSS,
-      invoice_number: props.invoiceData.invoiceNumber,
-      title: `Invoice - ${props.invoiceData.customer.name}`
-    }, {
-      responseType: 'blob'
-    });
-
+    const response = await axios.post(
+      baseUrl + "invoice/v2/html-to-pdf/",
+      {
+        html_content: invoiceHTML,
+        css_content: tailwindCSS + printCSS,
+        invoice_number: props.invoiceData.invoiceNumber,
+        title: `Invoice - ${props.invoiceData.customer.name}`,
+      },
+      {
+        responseType: "blob",
+      }
+    );
 
     // Create a filename based on invoice details
-    const customerName = props.invoiceData.customer.name?.replace(/\s+/g, '_') || 'customer';
-    const invoiceNumber = props.invoiceData.invoiceNumber?.replace(/[^\w-]/g, '') || 'invoice';
+    const customerName =
+      props.invoiceData.customer.name?.replace(/\s+/g, "_") || "customer";
+    const invoiceNumber =
+      props.invoiceData.invoiceNumber?.replace(/[^\w-]/g, "") || "invoice";
     const filename = `invoice_${invoiceNumber}_${customerName}.pdf`;
 
     // Create a download link for the PDF blob
     const blobUrl = window.URL.createObjectURL(response.data);
-    const downloadLink = document.createElement('a');
+    const downloadLink = document.createElement("a");
     downloadLink.href = blobUrl;
     downloadLink.download = filename;
 
@@ -269,20 +296,19 @@ const generatePdf = async () => {
 
     // Show success notification
     ElNotification({
-      title: 'Success',
-      message: 'PDF generated and downloaded successfully',
-      type: 'success',
+      title: "Success",
+      message: "PDF generated and downloaded successfully",
+      type: "success",
     });
-
   } catch (error) {
-    console.error('Error generating PDF:', error);
-    pdfMessage.value = 'Failed to generate PDF. Please try again.';
-    pdfMessageType.value = 'error';
+    console.error("Error generating PDF:", error);
+    pdfMessage.value = "Failed to generate PDF. Please try again.";
+    pdfMessageType.value = "error";
 
     ElNotification({
-      title: 'Error',
-      message: 'Failed to generate PDF. Please try again.',
-      type: 'error',
+      title: "Error",
+      message: "Failed to generate PDF. Please try again.",
+      type: "error",
     });
   } finally {
     isGeneratingPdf.value = false;

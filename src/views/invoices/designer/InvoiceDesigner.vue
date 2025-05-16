@@ -2,11 +2,51 @@
 
   <div class="flex flex-col  gap-4">
     <div class="flex items-center justify-between">
-      <h2 class="text-2xl font-bold">Invoice Details</h2>
-
+      <h2 class="text-2xl font-bold capitalize">{{ invoiceData?.type }} Details</h2>
+      <div class="flex w-[250px] rounded-md overflow-hidden border border-gray-300 mt-1">
+        <button type="button"
+                class="flex-1 py-2 px-4 text-center transition-all duration-200 focus:outline-none flex items-center justify-center"
+                :class="[
+                  invoiceData?.type === 'invoice'
+                    ? 'bg-blue-500 text-white font-medium'
+                    : 'bg-white text-gray-700 hover:bg-gray-50',
+                ]"
+                @click="updateInvoiceType('invoice')">
+          <!-- Document icon (you can use your own icon here) -->
+          <svg class="w-4 h-4 mr-2"
+               fill="currentColor"
+               viewBox="0 0 20 20"
+               xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                  d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                  clip-rule="evenodd"></path>
+          </svg>
+          Invoice
+        </button>
+        <button type="button"
+                class="flex-1 py-2 px-4 text-center transition-all duration-200 focus:outline-none flex items-center justify-center"
+                :class="[
+                  invoiceData?.type === 'quotation'
+                    ? 'bg-blue-500 text-white font-medium'
+                    : 'bg-white text-gray-700 hover:bg-gray-50',
+                ]"
+                @click="updateInvoiceType('quotation')">
+          <!-- Quote icon (you can use your own icon here) -->
+          <svg class="w-4 h-4 mr-2"
+               fill="currentColor"
+               viewBox="0 0 20 20"
+               xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                  d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                  clip-rule="evenodd"></path>
+          </svg>
+          Quotation
+        </button>
+      </div>
     </div>
     <div class="flex gap-2 justify-between md:px-4 ">
       <CompanyLogo :modelValue="invoiceData.company.logo"
+                   :invoiceTypeValue="invoiceData.type"
                    @update:modelValue="updateLogo" />
       <CompanyAddress @update:modelValue="updateInvoiceData"
                       :model-value="invoiceData"></CompanyAddress>
@@ -150,7 +190,6 @@ const props = defineProps({
 
 
 const emit = defineEmits(["update:invoiceData"]);
-console.log("invoiceData", props.invoiceData)
 const updateLogo = (logoData) => {
   emit("update:invoiceData", {
     ...props.invoiceData,
@@ -158,6 +197,12 @@ const updateLogo = (logoData) => {
       ...props.invoiceData.company,
       logo: logoData,
     },
+  });
+};
+const updateInvoiceType = (invoiceType) => {
+  emit("update:invoiceData", {
+    ...props.invoiceData,
+    'type': invoiceType
   });
 };
 
