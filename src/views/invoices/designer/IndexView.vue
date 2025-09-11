@@ -12,29 +12,35 @@
                   class="flex gap-2 text-xs items-center md:text-md rounded-md border px-2 py-2 h-fit w-fit bg-white">
             <div class="flex gap-2"
                  v-if="designerHidden">
-              <EyeIcon class="w-4 h-4"></EyeIcon> <span>Show Editor </span>
+              <EyeIcon class="w-4 h-4"></EyeIcon>
+              <span>Show Editor</span>
             </div>
             <div class="flex gap-2"
                  v-else>
-              <EyeOffIcon class="w-4 h-4"></EyeOffIcon> <span>Hide Editor</span>
+              <EyeOffIcon class="w-4 h-4"></EyeOffIcon>
+              <span>Hide Editor</span>
             </div>
           </button>
+
           <button @click="previewHidden = !previewHidden"
                   class="flex gap-2 text-xs items-center md:text-md rounded-md border px-2 py-2 h-fit w-fit bg-white">
             <div class="flex gap-2"
                  v-if="previewHidden">
-              <EyeIcon class="w-4 h-4"></EyeIcon> <span>Show Preview </span>
+              <EyeIcon class="w-4 h-4"></EyeIcon>
+              <span>Show Preview</span>
             </div>
             <div class="flex gap-2"
                  v-else>
-              <EyeOffIcon class="w-4 h-4"></EyeOffIcon> <span>Hide Preview </span>
+              <EyeOffIcon class="w-4 h-4"></EyeOffIcon>
+              <span>Hide Preview</span>
             </div>
           </button>
         </div>
+
         <div
-             :class="`${designerHidden || previewHidden ? 'grid-cols-1 ' : ' grid-cols-1 lg:grid-cols-2'} grid gap-8 relative`">
+             :class="`${designerHidden || previewHidden ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'} grid gap-8 relative`">
           <!-- Designer Section -->
-          <div v-if="!designerHidden"
+          <div v-if="!designerHidden && invoiceData"
                class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
             <InvoiceDesigner v-model:invoiceData="invoiceData" />
           </div>
@@ -53,19 +59,30 @@
           </div>
 
           <!-- Preview Section -->
-          <div v-if="!previewHidden"
+          <div v-if="!previewHidden && invoiceData"
                class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
             <InvoicePreview :invoiceData="invoiceData" />
           </div>
         </div>
-        <div v-if="designerHidden && previewHidden"
-             class="flex flex-col gap-2 md:pt-12 w-full h-96 items-center justify-center ">
-          <span class="text-6xl animate-[fade-in-out_4s_ease-in-out_infinite]"> 🤯</span>
-          <p class="text-center">You discovered Jon Cena mode </p>
-          <img class="animate-[fade-in-out_4s_ease-in-out_infinite]"
-               src="../../../assets/gifs/cena.gif" />
+
+        <!-- Loading State -->
+        <div v-if="!invoiceData"
+             class="flex justify-center items-center h-96">
+          <div class="text-center">
+            <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+            <p class="mt-4 text-gray-600">Loading invoice data...</p>
+          </div>
         </div>
-        <!-- <ChatInterface v-model="invoiceData" /> -->
+
+        <!-- Easter Egg -->
+        <div v-if="designerHidden && previewHidden"
+             class="flex flex-col gap-2 md:pt-12 w-full h-96 items-center justify-center">
+          <span class="text-6xl animate-[fade-in-out_4s_ease-in-out_infinite]">🤯</span>
+          <p class="text-center">You discovered John Cena mode</p>
+          <img class="animate-[fade-in-out_4s_ease-in-out_infinite]"
+               src="../../../assets/gifs/cena.gif"
+               alt="John Cena" />
+        </div>
       </div>
     </div>
   </div>
@@ -76,69 +93,85 @@ import InvoiceDesigner from "@/views/invoices/designer/InvoiceDesigner.vue";
 import InvoicePreview from "@/views/invoices/designer/InvoicePreview.vue";
 import AppHeader from "@/views/invoices/designer/components/AppHeader.vue";
 import { EyeIcon, EyeOffIcon } from "lucide-vue-next";
-import { ref } from "vue";
+import { ref, reactive, onMounted, nextTick } from "vue";
 
-let today = new Date();
-const dd = String(today.getDate()).padStart(2, '0');
-const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-const yyyy = today.getFullYear();
+// Initialize reactive refs
+const designerHidden = ref(false);
+const previewHidden = ref(false);
 
-today = yyyy + '-' + mm + '-' + dd;
-const tomorrow = yyyy + '-' + mm + '-' + dd + 1;
-console.log("today", today)
+// Get current date in proper format
+const today = new Date();
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
-const designerHidden = ref(false)
-const previewHidden = ref(false)
+const todayFormatted = formatDate(today);
 
-const invoiceData = ref({
-  type: 'invoice', // invoice, quotation
-  company: {
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-    logo: null,
-  },
-  customer: {
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-  },
-  subject: "",
-  invoiceNumber: `INV-001-${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
-  date: today,
-  dueDate: today,
-  currency: "KES",
-  // Add tax settings
-  taxSettings: {
-    noTax: false,
-    defaultRate: 16,
-    exemptionReason: null,
-  },
-  items: [
-    {
-      id: 1,
-      name: "Website Redesign",
-      description: "Complete redesign of company website including responsive layouts",
-      price: 2500.0,
-      quantity: 1,
-      tax: 16,
+// Initialize invoice data as reactive object
+const invoiceData = ref(null);
+
+// Initialize the invoice data
+const initializeInvoiceData = () => {
+  invoiceData.value = reactive({
+    type: 'invoice', // invoice, quotation
+    company: {
+      name: "",
+      email: "",
+      address: "",
+      phone: "",
+      logo: null,
     },
-  ],
-  discount: {
-    enabled: false,
-    value: 10,
-  },
-  status: "draft",
-  notes: "Thank you for your business! ",
-  paymentTerms: "All Invoices Must be paid before the due date",
-  paymentMethods: ["Credit Card", "Bank Transfer", "PayPal"],
-  metadata: {
-    createdAt: "2023-06-01T10:00:00Z",
-    lastModified: "2023-06-01T15:30:00Z",
-    createdBy: "sarah.designer@fikdesign.com",
-  },
+    customer: {
+      name: "",
+      email: "",
+      address: "",
+      phone: "",
+    },
+    subject: "",
+    invoiceNumber: `INV-001-${today.getMonth() + 1}-${today.getFullYear()}`,
+    date: todayFormatted,
+    dueDate: todayFormatted,
+    currency: "KES",
+    // Add tax settings
+    taxSettings: {
+      noTax: false,
+      defaultRate: 16,
+      exemptionReason: null,
+    },
+    items: [
+      {
+        id: 1,
+        name: "Website Redesign",
+        description: "Complete redesign of company website including responsive layouts",
+        price: 2500.0,
+        quantity: 1,
+        tax: 16,
+      },
+    ],
+    discount: {
+      enabled: false,
+      value: 10,
+    },
+    status: "draft",
+    notes: "Thank you for your business!",
+    paymentTerms: "All Invoices Must be paid before the due date",
+    paymentMethods: ["Credit Card", "Bank Transfer", "PayPal"],
+    metadata: {
+      createdAt: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
+      createdBy: "user@example.com",
+    },
+  });
+};
+
+// Initialize on component mount
+onMounted(async () => {
+  await nextTick();
+  initializeInvoiceData();
+  console.log("Invoice data initialized:", invoiceData.value);
 });
 </script>
 
