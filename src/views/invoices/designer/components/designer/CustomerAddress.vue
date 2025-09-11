@@ -6,51 +6,40 @@
       <div class="flex flex-wrap gap-2">
         <label class="block">
           <span class="text-sm font-medium text-gray-700">Customer Name *</span>
-          <input
-            :value="modelValue.customer.name"
-            @input="updateCustomerField('name', $event.target.value)"
-            class="input mt-1"
-            placeholder="Customer name"
-          />
+          <input :value="modelValue.customer.name"
+                 @input="updateCustomerField('name', $event.target.value)"
+                 class="input mt-1"
+                 placeholder="Customer name" />
         </label>
-        <label class="block">
+        <label class="block w-full md:w-fit">
           <span class="text-sm font-medium text-gray-700">Email</span>
-          <input
-            :value="modelValue.customer.email"
-            @input="updateCustomerField('email', $event.target.value)"
-            type="email"
-            class="input mt-1"
-            placeholder="customer@example.com"
-          />
+          <input :value="modelValue.customer.email"
+                 @input="updateCustomerField('email', $event.target.value)"
+                 type="email"
+                 class="input mt-1"
+                 placeholder="customer@example.com" />
         </label>
-        <p
-          class="cursor-pointer w-full text-blue-400"
-          @click="showMoreAddressDetails = !showMoreAddressDetails"
-        >
-          <span v-if="showMoreAddressDetails">Show Less</span
-          ><span v-else>Show More</span>
+        <p class="cursor-pointer w-full text-blue-400"
+           @click="showMoreAddressDetails = !showMoreAddressDetails">
+          <span v-if="showMoreAddressDetails">Show Less</span><span v-else>Show More</span>
         </p>
 
         <template v-if="showMoreAddressDetails">
           <label class="block">
             <span class="text-sm font-medium text-gray-700">Address</span>
-            <textarea
-              :value="modelValue.customer.address"
-              @input="updateCustomerField('address', $event.target.value)"
-              class="input mt-1"
-              rows="2"
-              placeholder="Customer address"
-            ></textarea>
+            <textarea :value="modelValue.customer.address"
+                      @input="updateCustomerField('address', $event.target.value)"
+                      class="input mt-1"
+                      rows="2"
+                      placeholder="Customer address"></textarea>
           </label>
 
           <label class="block">
             <span class="text-sm font-medium text-gray-700">Phone</span>
-            <input
-              :value="modelValue.customer.phone"
-              @input="updateCustomerField('phone', $event.target.value)"
-              class="input mt-1"
-              placeholder="Phone number"
-            />
+            <input :value="modelValue.customer.phone"
+                   @input="updateCustomerField('phone', $event.target.value)"
+                   class="input mt-1"
+                   placeholder="Phone number" />
           </label>
         </template>
       </div>
@@ -60,54 +49,55 @@
 
     <div class="space-y-2 flex flex-col border-t">
       <div class="w-full flex flex-row justify-between">
-        <p
-          class="cursor-pointer text-start pt-4 w-full text-blue-400"
-          @click="showSubject = !showSubject"
-        >
-          <span v-if="showSubject">Collapse Section</span
-          ><span v-else>Show Section</span>
+        <p class="cursor-pointer text-start pt-4 w-full text-blue-400"
+           @click="showSubject = !showSubject">
+          <span v-if="showSubject">Collapse Section</span><span v-else>Show Section</span>
         </p>
       </div>
       <template v-if="showSubject">
         <label class="block">
           <span class="text-sm font-medium text-gray-700">Subject</span>
-          <input
-            :value="modelValue.subject"
-            @input="updateField('subject', $event.target.value)"
-            class="input mt-1"
-            placeholder="Invoice subject"
-          />
+          <input :value="modelValue.subject"
+                 @input="updateField('subject', $event.target.value)"
+                 class="input mt-1"
+                 placeholder="Invoice subject" />
         </label>
         <label class="block">
           <span class="text-sm font-medium text-gray-700">Invoice Number</span>
-          <input
-            :value="modelValue.invoiceNumber"
-            @input="updateField('invoiceNumber', $event.target.value)"
-            class="input mt-1"
-            placeholder="Invoice subject"
-          />
+          <input :value="modelValue.invoiceNumber"
+                 @input="updateField('invoiceNumber', $event.target.value)"
+                 class="input mt-1"
+                 placeholder="Invoice subject" />
         </label>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <label class="block">
-            <span class="text-sm font-medium text-gray-700">Due date</span>
+            <span class="text-sm font-medium text-gray-700">Issue date</span>
             <div class="mt-1 relative">
-              <input
-                type="date"
-                :value="modelValue.dueDate"
-                @input="updateField('dueDate', $event.target.value)"
-                class="input"
-              />
+              <input type="date"
+                     :value="modelValue.date"
+                     @input="updateField('date', $event.target.value)"
+                     class="input" />
               <span class="absolute right-3 top-2.5 text-gray-400">
                 <i class="fas fa-calendar"></i>
               </span>
             </div>
           </label>
-          <SearchableCurrencyDropdown
-            :modelValue="modelValue"
-            @update:currency="updateCurrency"
-            :currencyOptions="currencyOptionsVals"
-          />
+          <label class="block">
+            <span class="text-sm font-medium text-gray-700">Due date</span>
+            <div class="mt-1 relative">
+              <input type="date"
+                     :value="modelValue.dueDate"
+                     @input="updateField('dueDate', $event.target.value)"
+                     class="input" />
+              <span class="absolute right-3 top-2.5 text-gray-400">
+                <i class="fas fa-calendar"></i>
+              </span>
+            </div>
+          </label>
+          <SearchableCurrencyDropdown :modelValue="modelValue"
+                                      @update:currency="updateCurrency"
+                                      :currencyOptions="currencyOptionsVals" />
 
           <!-- <label class="block">
             <span class="text-sm font-medium text-gray-700">Currency</span>

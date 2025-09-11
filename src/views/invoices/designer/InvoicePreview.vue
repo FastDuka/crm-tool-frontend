@@ -3,16 +3,12 @@
 <template>
   <div class="">
     <!-- Header Actions -->
-    <div
-      class="flex md:flex-row flex-col items-start md:items-center justify-between mb-6"
-    >
+    <div class="flex md:flex-row flex-col items-start md:items-center justify-between mb-6">
       <h2 class="text-2xl font-bold">Preview</h2>
       <div class="flex space-x-4">
-        <button
-          class="btn-outline"
-          @click="generatePdf"
-          :disabled="isGeneratingPdf"
-        >
+        <button class="btn-outline"
+                @click="generatePdf"
+                :disabled="isGeneratingPdf">
           <i class="fas fa-file-pdf mr-2"></i>
           {{ isGeneratingPdf ? "Generating..." : "Download PDF" }}
         </button>
@@ -24,29 +20,25 @@
     </div>
 
     <!-- PDF Generation Status Message -->
-    <div
-      v-if="pdfMessage"
-      class="mb-4 p-3 rounded-md"
-      :class="
-        pdfMessageType === 'error'
-          ? 'bg-red-100 text-red-700'
-          : 'bg-green-100 text-green-700'
-      "
-    >
+    <div v-if="pdfMessage"
+         class="mb-4 p-3 rounded-md"
+         :class="pdfMessageType === 'error'
+            ? 'bg-red-100 text-red-700'
+            : 'bg-green-100 text-green-700'
+          ">
       {{ pdfMessage }}
     </div>
 
     <!-- Invoice Preview Card -->
-    <div class="p-2 min-h-[800px]" ref="invoicePreview">
+    <div class="p-2 min-h-[800px]"
+         ref="invoicePreview">
       <!-- Company and Invoice Details Header -->
       <div class="flex justify-between items-start mb-8">
         <div class="flex flex-col justify-start">
-          <CompanyLogoPreview
-            :logo="invoiceData.company.logo"
-            :company-name="invoiceData.company.name"
-            size="large"
-            class="mb-4"
-          />
+          <CompanyLogoPreview :logo="invoiceData.company.logo"
+                              :company-name="invoiceData.company.name"
+                              size="large"
+                              class="mb-4" />
 
           <AddressPreview :invoice-data="invoiceData"></AddressPreview>
         </div>
@@ -82,20 +74,19 @@
       </div>
 
       <!-- Items Table -->
-      <ProductList
-        :items="invoiceData.items"
-        :currency="invoiceData.currency"
-      />
+      <ProductList :items="invoiceData.items"
+                   :currency="invoiceData.currency" />
 
       <!-- Totals Section -->
-      <div class="w-80 ml-auto">
+      <div class="md:w-80 ml-auto">
         <div class="space-y-3">
           <div class="flex justify-between">
             <span class="text-gray-500">Subtotal</span>
             <span>{{ formatCurrency(calculateSubtotal) }}</span>
           </div>
 
-          <div v-if="invoiceData.discount.enabled" class="flex justify-between">
+          <div v-if="invoiceData.discount.enabled"
+               class="flex justify-between">
             <span class="text-gray-500">
               Discount ({{ invoiceData.discount.value }}%)
             </span>
@@ -125,11 +116,8 @@
       <div class="flex w-full cursor-pointer">
         <p class="bottom-4 text-center absolute capitalize">
           Invoice Was created at
-          <a
-            class="text-blue-400"
-            href="https://invoices.fastduka.co.ke/designer"
-            >FastDuka Invoicing</a
-          >
+          <a class="text-blue-400"
+             href="https://invoices.fastduka.co.ke/designer">FastDuka Invoicing</a>
         </p>
       </div>
     </div>

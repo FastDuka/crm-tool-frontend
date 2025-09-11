@@ -1,9 +1,9 @@
 <template>
 
   <div class="flex flex-col  gap-4">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
       <h2 class="text-2xl font-bold capitalize">{{ invoiceData?.type }} Details</h2>
-      <div class="flex w-[250px] rounded-md overflow-hidden border border-gray-300 mt-1">
+      <div class="flex md:w-[250px] rounded-md overflow-hidden border border-gray-300 mt-1">
         <button type="button"
                 class="flex-1 py-2 px-4 text-center transition-all duration-200 focus:outline-none flex items-center justify-center"
                 :class="[
