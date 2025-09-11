@@ -23,8 +23,8 @@
     <div v-if="pdfMessage"
          class="mb-4 p-3 rounded-md"
          :class="pdfMessageType === 'error'
-            ? 'bg-red-100 text-red-700'
-            : 'bg-green-100 text-green-700'
+          ? 'bg-red-100 text-red-700'
+          : 'bg-green-100 text-green-700'
           ">
       {{ pdfMessage }}
     </div>
@@ -56,14 +56,14 @@
 
       <!-- Subject -->
       <div class="mb-8">
-        <h2 class="text-xl font-semibold mb-2">{{ invoiceData.subject }}</h2>
+        <h2 class="text-xl font-semibold mb-2"> {{ invoiceData.subject }}</h2>
       </div>
 
       <!-- Customer Billing Addresses -->
       <div class="grid grid-cols-2 gap-8 mb-8">
         <!-- Bill To -->
         <div>
-          <h3 class="text-gray-500 text-sm font-medium mb-2">BILL TO</h3>
+          <h3 class="text-gray-500 text-sm font-medium mb-2"> BILL TO</h3>
           <div class="text-gray-800">
             <p class="font-semibold">{{ invoiceData.customer.name }}</p>
             <p>{{ invoiceData.customer.address }}</p>
@@ -73,8 +73,10 @@
         </div>
       </div>
 
+      
       <!-- Items Table -->
-      <ProductList :items="invoiceData.items"
+      <ProductList :noTax="invoiceData.taxSettings.noTax"
+                   :items="invoiceData.items"
                    :currency="invoiceData.currency" />
 
       <!-- Totals Section -->
@@ -95,7 +97,8 @@
             </span>
           </div>
 
-          <div class="flex justify-between">
+          <div v-if="!invoiceData.taxSettings.noTax"
+               class="flex justify-between">
             <span class="text-gray-500">Tax</span>
             <span>{{ formatCurrency(calculateTax) }}</span>
           </div>

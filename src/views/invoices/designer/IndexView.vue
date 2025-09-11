@@ -36,7 +36,6 @@
           <!-- Designer Section -->
           <div v-if="!designerHidden"
                class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
-
             <InvoiceDesigner v-model:invoiceData="invoiceData" />
           </div>
 
@@ -54,7 +53,6 @@
           </div>
 
           <!-- Preview Section -->
-
           <div v-if="!previewHidden"
                class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
             <InvoicePreview :invoiceData="invoiceData" />
@@ -66,19 +64,20 @@
           <p class="text-center">You discovered Jon Cena mode </p>
           <img class="animate-[fade-in-out_4s_ease-in-out_infinite]"
                src="../../../assets/gifs/cena.gif" />
-
         </div>
         <!-- <ChatInterface v-model="invoiceData" /> -->
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
 import InvoiceDesigner from "@/views/invoices/designer/InvoiceDesigner.vue";
 import InvoicePreview from "@/views/invoices/designer/InvoicePreview.vue";
 import AppHeader from "@/views/invoices/designer/components/AppHeader.vue";
 import { EyeIcon, EyeOffIcon } from "lucide-vue-next";
 import { ref } from "vue";
+
 let today = new Date();
 const dd = String(today.getDate()).padStart(2, '0');
 const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -87,10 +86,12 @@ const yyyy = today.getFullYear();
 today = yyyy + '-' + mm + '-' + dd;
 const tomorrow = yyyy + '-' + mm + '-' + dd + 1;
 console.log("today", today)
+
 const designerHidden = ref(false)
 const previewHidden = ref(false)
+
 const invoiceData = ref({
-  type:'invoice',//invoice, quotation
+  type: 'invoice', // invoice, quotation
   company: {
     name: "",
     email: "",
@@ -109,12 +110,17 @@ const invoiceData = ref({
   date: today,
   dueDate: today,
   currency: "KES",
+  // Add tax settings
+  taxSettings: {
+    noTax: false,
+    defaultRate: 16,
+    exemptionReason: null,
+  },
   items: [
     {
       id: 1,
       name: "Website Redesign",
-      description:
-        "Complete redesign of company website including responsive layouts",
+      description: "Complete redesign of company website including responsive layouts",
       price: 2500.0,
       quantity: 1,
       tax: 16,

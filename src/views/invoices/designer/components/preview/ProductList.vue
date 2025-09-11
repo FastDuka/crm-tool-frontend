@@ -6,7 +6,8 @@
           <th class="text-left py-2 text-gray-500 font-medium">ITEM</th>
           <th class="text-right py-2 text-gray-500 font-medium w-32 md:block hidden">QTY</th>
           <th class="text-right py-2 text-gray-500 font-medium w-32">PRICE</th>
-          <th class="text-right py-2 text-gray-500 font-medium w-32">TAX</th>
+          <th v-if="!noTax"
+              class="text-right py-2 text-gray-500 font-medium w-32">TAX </th>
           <th class="text-right py-2 text-gray-500 font-medium w-40">AMOUNT</th>
         </tr>
       </thead>
@@ -21,7 +22,8 @@
           </td>
           <td class="py-4 text-right md:block hidden">{{ item.quantity }}</td>
           <td class="py-4 text-right">{{ formatCurrency(item.price) }}</td>
-          <td class="py-4 text-right">{{ item.tax }}%</td>
+          <td v-if="!noTax"
+              class="py-4 text-right">{{ item.tax }}%</td>
           <td class="py-4 text-right">
             {{ formatCurrency(item.price * item.quantity) }}
           </td>
@@ -33,6 +35,10 @@
 
 <script setup>
 const props = defineProps({
+  noTax: {
+    type: Boolean,
+    default: false,
+  },
   items: {
     type: Array,
     required: true,
